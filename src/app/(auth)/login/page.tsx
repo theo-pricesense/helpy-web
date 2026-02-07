@@ -40,11 +40,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       const response = await authApi.login(data);
-      login(
-        response.tokens.accessToken,
-        response.tokens.refreshToken,
-        response.user,
-      );
+      login(response.accessToken, response.refreshToken, response.user);
       toast.success("로그인 성공!");
       router.push("/organizations");
     } catch (error) {

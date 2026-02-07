@@ -8,17 +8,19 @@ import { ApiClient } from "./generated";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-const apiClient = new ApiClient({
+// Unauthenticated client for auth endpoints
+const publicClient = new ApiClient({
   BASE: API_BASE_URL,
   WITH_CREDENTIALS: true,
   CREDENTIALS: "include",
 });
 
 export const authApi = {
-  sendCode: (data: SendCodeDto) => apiClient.auth.sendCode(data),
-  verifyCode: (data: VerifyCodeDto) => apiClient.auth.verifyCode(data),
-  signup: (data: SignupDto) => apiClient.auth.signup(data),
-  login: (data: LoginDto) => apiClient.auth.login(data),
-  refresh: (refreshToken: string) => apiClient.auth.refresh({ refreshToken }),
-  logout: (refreshToken: string) => apiClient.auth.logout({ refreshToken }),
+  sendCode: (data: SendCodeDto) => publicClient.auth.sendCode(data),
+  verifyCode: (data: VerifyCodeDto) => publicClient.auth.verifyCode(data),
+  signup: (data: SignupDto) => publicClient.auth.signup(data),
+  login: (data: LoginDto) => publicClient.auth.login(data),
+  refresh: (refreshToken: string) =>
+    publicClient.auth.refresh({ refreshToken }),
+  logout: (refreshToken: string) => publicClient.auth.logout({ refreshToken }),
 };

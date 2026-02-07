@@ -107,11 +107,7 @@ export default function SignupPage() {
         name: data.name,
         organizationName: data.organizationName,
       });
-      loginAction(
-        response.tokens.accessToken,
-        response.tokens.refreshToken,
-        response.user,
-      );
+      loginAction(response.accessToken, response.refreshToken, response.user);
       toast.success("회원가입이 완료되었습니다!");
       router.push("/organizations");
     } catch (error) {
