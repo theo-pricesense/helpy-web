@@ -13,7 +13,7 @@ export class UsersService {
    * @returns any
    * @throws ApiError
    */
-  public usersControllerGetMe(): CancelablePromise<any> {
+  public getMe(): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "GET",
       url: "/users/me",
@@ -25,9 +25,7 @@ export class UsersService {
    * @returns any
    * @throws ApiError
    */
-  public usersControllerUpdateMe(
-    requestBody: UpdateMeDto,
-  ): CancelablePromise<any> {
+  public updateMe(requestBody: UpdateMeDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "PATCH",
       url: "/users/me",
@@ -40,7 +38,7 @@ export class UsersService {
    * @returns any
    * @throws ApiError
    */
-  public usersControllerDeleteMe(): CancelablePromise<any> {
+  public deleteMe(): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "DELETE",
       url: "/users/me",

@@ -18,9 +18,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerSendCode(
-    requestBody: SendCodeDto,
-  ): CancelablePromise<any> {
+  public sendCode(requestBody: SendCodeDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/send-code",
@@ -34,9 +32,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerVerifyCode(
-    requestBody: VerifyCodeDto,
-  ): CancelablePromise<any> {
+  public verifyCode(requestBody: VerifyCodeDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/verify-code",
@@ -50,7 +46,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerSignup(requestBody: SignupDto): CancelablePromise<any> {
+  public signup(requestBody: SignupDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/signup",
@@ -64,7 +60,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerLogin(requestBody: LoginDto): CancelablePromise<any> {
+  public login(requestBody: LoginDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/login",
@@ -78,9 +74,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerRefresh(
-    requestBody: RefreshDto,
-  ): CancelablePromise<any> {
+  public refresh(requestBody: RefreshDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/refresh",
@@ -94,7 +88,7 @@ export class AuthService {
    * @returns any
    * @throws ApiError
    */
-  public authControllerLogout(requestBody: RefreshDto): CancelablePromise<any> {
+  public logout(requestBody: RefreshDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/logout",

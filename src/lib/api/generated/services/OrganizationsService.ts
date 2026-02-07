@@ -13,7 +13,7 @@ export class OrganizationsService {
    * @returns any
    * @throws ApiError
    */
-  public organizationsControllerGetMyOrganizations(): CancelablePromise<any> {
+  public getMyOrganizations(): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "GET",
       url: "/organizations/me",
@@ -25,9 +25,7 @@ export class OrganizationsService {
    * @returns any
    * @throws ApiError
    */
-  public organizationsControllerGetOrganization(
-    id: string,
-  ): CancelablePromise<any> {
+  public getOrganization(id: string): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "GET",
       url: "/organizations/{id}",
@@ -43,7 +41,7 @@ export class OrganizationsService {
    * @returns any
    * @throws ApiError
    */
-  public organizationsControllerUpdateOrganization(
+  public updateOrganization(
     id: string,
     requestBody: UpdateOrganizationDto,
   ): CancelablePromise<any> {

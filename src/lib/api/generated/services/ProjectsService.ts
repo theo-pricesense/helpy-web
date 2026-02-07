@@ -15,9 +15,7 @@ export class ProjectsService {
    * @returns any
    * @throws ApiError
    */
-  public projectsControllerCreateProject(
-    requestBody: CreateProjectDto,
-  ): CancelablePromise<any> {
+  public createProject(requestBody: CreateProjectDto): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/projects",
@@ -31,9 +29,7 @@ export class ProjectsService {
    * @returns any
    * @throws ApiError
    */
-  public projectsControllerGetProjects(
-    organizationId: string,
-  ): CancelablePromise<any> {
+  public getProjects(organizationId: string): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects",
@@ -48,7 +44,7 @@ export class ProjectsService {
    * @returns any
    * @throws ApiError
    */
-  public projectsControllerGetProject(id: string): CancelablePromise<any> {
+  public getProject(id: string): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects/{id}",
@@ -64,7 +60,7 @@ export class ProjectsService {
    * @returns any
    * @throws ApiError
    */
-  public projectsControllerUpdateProject(
+  public updateProject(
     id: string,
     requestBody: UpdateProjectDto,
   ): CancelablePromise<any> {
@@ -84,7 +80,7 @@ export class ProjectsService {
    * @returns void
    * @throws ApiError
    */
-  public projectsControllerDeleteProject(id: string): CancelablePromise<void> {
+  public deleteProject(id: string): CancelablePromise<void> {
     return this.httpRequest.request({
       method: "DELETE",
       url: "/projects/{id}",
@@ -99,9 +95,7 @@ export class ProjectsService {
    * @returns any
    * @throws ApiError
    */
-  public projectsControllerRegenerateApiKey(
-    id: string,
-  ): CancelablePromise<any> {
+  public regenerateApiKey(id: string): CancelablePromise<any> {
     return this.httpRequest.request({
       method: "POST",
       url: "/projects/{id}/regenerate-key",
