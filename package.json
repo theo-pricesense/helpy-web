@@ -9,7 +9,7 @@
     "lint": "biome check --max-diagnostics 100",
     "format": "biome format --write",
     "type-check": "tsc --noEmit",
-    "generate-api": "openapi --input http://localhost:4000/docs-json --output src/lib/api/generated --client fetch --name ApiClient && node scripts/fix-api-client.js && biome check --write src/lib/api/generated",
+    "generate-api": "curl -s http://localhost:4000/docs-json -o openapi.json && openapi --input openapi.json --output src/lib/api/generated --client fetch --name ApiClient && node scripts/fix-api-client.js && biome check --write src/lib/api/generated",
     "prepare": "husky"
   },
   "dependencies": {
