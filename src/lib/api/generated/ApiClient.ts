@@ -9,6 +9,7 @@ import { AppService } from "./services/AppService";
 import { AuthService } from "./services/AuthService";
 import { ConversationsService } from "./services/ConversationsService";
 import { DocumentsService } from "./services/DocumentsService";
+import { HealthService } from "./services/HealthService";
 import { OrganizationsService } from "./services/OrganizationsService";
 import { ProjectsService } from "./services/ProjectsService";
 import { UsersService } from "./services/UsersService";
@@ -20,6 +21,7 @@ export class ApiClient {
   public readonly auth: AuthService;
   public readonly conversations: ConversationsService;
   public readonly documents: DocumentsService;
+  public readonly health: HealthService;
   public readonly organizations: OrganizationsService;
   public readonly projects: ProjectsService;
   public readonly users: UsersService;
@@ -44,6 +46,7 @@ export class ApiClient {
     this.auth = new AuthService(this.request);
     this.conversations = new ConversationsService(this.request);
     this.documents = new DocumentsService(this.request);
+    this.health = new HealthService(this.request);
     this.organizations = new OrganizationsService(this.request);
     this.projects = new ProjectsService(this.request);
     this.users = new UsersService(this.request);

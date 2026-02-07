@@ -5,6 +5,8 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { ChangePasswordDto } from "../models/ChangePasswordDto";
+import type { MessageResponseDto } from "../models/MessageResponseDto";
 import type { UpdateMeDto } from "../models/UpdateMeDto";
 import type { UserResponseDto } from "../models/UserResponseDto";
 export class UsersService {
@@ -45,6 +47,22 @@ export class UsersService {
     return this.httpRequest.request({
       method: "DELETE",
       url: "/users/me",
+    });
+  }
+  /**
+   * 비밀번호 변경
+   * @param requestBody
+   * @returns MessageResponseDto
+   * @throws ApiError
+   */
+  public changePassword(
+    requestBody: ChangePasswordDto,
+  ): CancelablePromise<MessageResponseDto> {
+    return this.httpRequest.request({
+      method: "PATCH",
+      url: "/users/me/password",
+      body: requestBody,
+      mediaType: "application/json",
     });
   }
 }

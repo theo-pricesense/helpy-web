@@ -7,19 +7,22 @@ import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import type { SendMessageDto } from "../models/SendMessageDto";
 import type { StartConversationDto } from "../models/StartConversationDto";
+import type { StartConversationResponseDto } from "../models/StartConversationResponseDto";
+import type { WidgetConversationResponseDto } from "../models/WidgetConversationResponseDto";
+import type { WidgetMessageResponseDto } from "../models/WidgetMessageResponseDto";
 export class WidgetService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 대화 시작
    * @param requestBody
    * @param xApiKey Project API Key
-   * @returns any
+   * @returns StartConversationResponseDto
    * @throws ApiError
    */
   public startConversation(
     requestBody: StartConversationDto,
     xApiKey?: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<StartConversationResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/widget/conversations",
@@ -60,13 +63,13 @@ export class WidgetService {
    * 메시지 히스토리 조회
    * @param conversationId
    * @param xApiKey Project API Key
-   * @returns any
+   * @returns WidgetMessageResponseDto
    * @throws ApiError
    */
   public getMessages(
     conversationId: string,
     xApiKey?: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<Array<WidgetMessageResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
       url: "/widget/conversations/{conversationId}/messages",
@@ -82,13 +85,13 @@ export class WidgetService {
    * 대화 상세 조회
    * @param conversationId
    * @param xApiKey Project API Key
-   * @returns any
+   * @returns WidgetConversationResponseDto
    * @throws ApiError
    */
   public getConversation(
     conversationId: string,
     xApiKey?: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<WidgetConversationResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/widget/conversations/{conversationId}",
