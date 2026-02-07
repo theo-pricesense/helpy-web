@@ -2,8 +2,6 @@
 
 import { Building2, Loader2, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import {
   Card,
@@ -12,27 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { organizationsApi } from "@/lib/api";
-import type { Organization } from "@/lib/types";
+import { useOrganizations } from "@/hooks/use-organizations";
 
 export default function OrganizationsPage() {
   const router = useRouter();
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadOrganizations() {
-      try {
-        const data = await organizationsApi.getMyOrganizations();
-        setOrganizations(data);
-      } catch {
-        toast.error("Failed to load organizations");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadOrganizations();
-  }, []);
+  const { data: organizations = [], isLoading } = useOrganizations();
 
   if (isLoading) {
     return (

@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import type React from "react";
-import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/lib/providers/theme-provider";
+import { Providers } from "@/lib/providers";
 
 import "./globals.css";
 
@@ -35,15 +34,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Loader2, Mail, Shield, UserPlus } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,8 +16,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
-import { authApi } from "@/lib/api";
-import { useAuthStore } from "@/stores/auth-store";
+import { useSendCode, useSignup, useVerifyCode } from "@/hooks/use-auth";
 
 // Step schemas
 const emailSchema = z.object({
@@ -47,13 +45,14 @@ const steps = [
 ];
 
 export default function SignupPage() {
-  const router = useRouter();
-  const loginAction = useAuthStore((s) => s.login);
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState("");
   const [otpValue, setOtpValue] = useState("");
   const [verifyToken, setVerifyToken] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const sendCodeMutation = useSendCode();
+  const verifyCodeMutation = useVerifyCode();
+  const signupMutation = useSignup();
 
   // Step 1: Email form
   const emailForm = useForm<EmailForm>({
@@ -65,59 +64,52 @@ export default function SignupPage() {
     resolver: zodResolver(infoSchema),
   });
 
-  const handleSendCode = async (data: EmailForm) => {
-    setIsSubmitting(true);
-    try {
-      await authApi.sendCode({ email: data.email });
-      setEmail(data.email);
-      setStep(1);
-      toast.success("인증 코드가 발송되었습니다.");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "코드 발송에 실패했습니다.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSendCode = (data: EmailForm) => {
+    sendCodeMutation.mutate(
+      { email: data.email },
+      {
+        onSuccess: () => {
+          setEmail(data.email);
+          setStep(1);
+          toast.success("인증 코드가 발송되었습니다.");
+        },
+        onError: (error) => {
+          toast.error(error.message || "코드 발송에 실패했습니다.");
+        },
+      },
+    );
   };
 
-  const handleVerifyCode = useCallback(async () => {
+  const handleVerifyCode = () => {
     if (otpValue.length !== 6) return;
-    setIsSubmitting(true);
-    try {
-      const response = await authApi.verifyCode({ email, code: otpValue });
-      setVerifyToken(response.token);
-      setStep(2);
-      toast.success("이메일이 인증되었습니다.");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "인증에 실패했습니다.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [otpValue, email]);
-
-  const handleSignup = async (data: InfoForm) => {
-    setIsSubmitting(true);
-    try {
-      const response = await authApi.signup({
-        token: verifyToken,
-        password: data.password,
-        name: data.name,
-        organizationName: data.organizationName,
-      });
-      loginAction(response.accessToken, response.refreshToken, response.user);
-      toast.success("회원가입이 완료되었습니다!");
-      router.push("/organizations");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "회원가입에 실패했습니다.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    verifyCodeMutation.mutate(
+      { email, code: otpValue },
+      {
+        onSuccess: (response) => {
+          setVerifyToken(response.token);
+          setStep(2);
+          toast.success("이메일이 인증되었습니다.");
+        },
+        onError: (error) => {
+          toast.error(error.message || "인증에 실패했습니다.");
+        },
+      },
+    );
   };
+
+  const handleSignup = (data: InfoForm) => {
+    signupMutation.mutate({
+      token: verifyToken,
+      password: data.password,
+      name: data.name,
+      organizationName: data.organizationName,
+    });
+  };
+
+  const isSubmitting =
+    sendCodeMutation.isPending ||
+    verifyCodeMutation.isPending ||
+    signupMutation.isPending;
 
   return (
     <div className="space-y-8">

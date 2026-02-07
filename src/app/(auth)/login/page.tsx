@@ -3,18 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { HelpyLogo } from "@/components/helpy-logo";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authApi } from "@/lib/api";
-import { useAuthStore } from "@/stores/auth-store";
+import { useLogin } from "@/hooks/use-auth";
 
 const loginSchema = z.object({
   email: z.string().email("올바른 이메일 주소를 입력해주세요."),
@@ -24,9 +19,7 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
-  const login = useAuthStore((s) => s.login);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: login, isPending } = useLogin();
 
   const {
     register,
@@ -36,22 +29,8 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginForm) => {
-    setIsSubmitting(true);
-    try {
-      const response = await authApi.login(data);
-      login(response.accessToken, response.refreshToken, response.user);
-      toast.success("로그인 성공!");
-      router.push("/organizations");
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "로그인에 실패했습니다. 다시 시도해주세요.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = (data: LoginForm) => {
+    login(data);
   };
 
   return (
@@ -99,8 +78,8 @@ export default function LoginPage() {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="animate-spin" />}
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending && <Loader2 className="animate-spin" />}
           로그인
         </Button>
       </form>
