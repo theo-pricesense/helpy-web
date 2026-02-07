@@ -22,6 +22,10 @@ interface AuthState {
   fetchUser: () => Promise<void>;
 }
 
+export const clearTokens = () => {
+  useAuthStore.getState().logout();
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
