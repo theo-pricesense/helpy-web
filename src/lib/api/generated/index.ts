@@ -23,7 +23,7 @@ export { UpdateConversationDto } from "./models/UpdateConversationDto";
 export type { UpdateDocumentDto } from "./models/UpdateDocumentDto";
 export type { UpdateMeDto } from "./models/UpdateMeDto";
 export type { UpdateOrganizationDto } from "./models/UpdateOrganizationDto";
-export type { UpdateProjectDto } from "./models/UpdateProjectDto";
+export { UpdateProjectDto } from "./models/UpdateProjectDto";
 export type { VerifyCodeDto } from "./models/VerifyCodeDto";
 
 export { AppService } from "./services/AppService";

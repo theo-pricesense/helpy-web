@@ -8,7 +8,20 @@ export type UpdateProjectDto = {
    */
   name?: string;
   /**
+   * 프로젝트 상태
+   */
+  status?: UpdateProjectDto.status;
+  /**
    * 프로젝트 설정
    */
   settings?: Record<string, any>;
 };
+export namespace UpdateProjectDto {
+  /**
+   * 프로젝트 상태
+   */
+  export enum status {
+    ACTIVE = "ACTIVE",
+    INACTIVE = "INACTIVE",
+  }
+}
