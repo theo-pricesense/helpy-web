@@ -226,21 +226,23 @@ export default function ProjectsPage() {
                       </CardTitle>
                     </div>
                   </div>
-                  <Badge
-                    variant={
-                      project.status === "active" ? "default" : "secondary"
-                    }
-                    className={
-                      project.status === "active"
-                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                        : ""
-                    }
-                  >
-                    {project.status === "active" ? (
-                      <Zap className="h-3 w-3 mr-1" />
-                    ) : null}
-                    {project.status}
-                  </Badge>
+                  {project.status && (
+                    <Badge
+                      variant={
+                        project.status === "active" ? "default" : "secondary"
+                      }
+                      className={
+                        project.status === "active"
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                          : ""
+                      }
+                    >
+                      {project.status === "active" && (
+                        <Zap className="h-3 w-3 mr-1" />
+                      )}
+                      {project.status}
+                    </Badge>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -250,9 +252,11 @@ export default function ProjectsPage() {
                     {new Date(project.createdAt).toLocaleDateString("ko-KR")}
                   </span>
                 </div>
-                <div className="font-mono text-xs text-muted-foreground bg-muted rounded-md px-2 py-1 truncate">
-                  {project.apiKey.slice(0, 16)}...
-                </div>
+                {project.apiKey && (
+                  <div className="font-mono text-xs text-muted-foreground bg-muted rounded-md px-2 py-1 truncate">
+                    {project.apiKey.slice(0, 16)}...
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

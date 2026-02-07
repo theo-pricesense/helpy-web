@@ -9,7 +9,7 @@ export interface Project {
   id: string;
   name: string;
   organizationId: string;
-  apiKey: string;
-  status: "active" | "inactive";
+  apiKey?: string;
+  status?: "active" | "inactive";
   createdAt: string;
 }
