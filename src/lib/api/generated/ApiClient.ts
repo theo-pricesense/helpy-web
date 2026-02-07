@@ -7,19 +7,23 @@ import { FetchHttpRequest } from "./core/FetchHttpRequest";
 import type { OpenAPIConfig } from "./core/OpenAPI";
 import { AppService } from "./services/AppService";
 import { AuthService } from "./services/AuthService";
+import { ConversationsService } from "./services/ConversationsService";
 import { DocumentsService } from "./services/DocumentsService";
 import { OrganizationsService } from "./services/OrganizationsService";
 import { ProjectsService } from "./services/ProjectsService";
 import { UsersService } from "./services/UsersService";
+import { WidgetService } from "./services/WidgetService";
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class ApiClient {
   public readonly app: AppService;
   public readonly auth: AuthService;
+  public readonly conversations: ConversationsService;
   public readonly documents: DocumentsService;
   public readonly organizations: OrganizationsService;
   public readonly projects: ProjectsService;
   public readonly users: UsersService;
+  public readonly widget: WidgetService;
   public readonly request: BaseHttpRequest;
   constructor(
     config?: Partial<OpenAPIConfig>,
@@ -38,9 +42,11 @@ export class ApiClient {
     });
     this.app = new AppService(this.request);
     this.auth = new AuthService(this.request);
+    this.conversations = new ConversationsService(this.request);
     this.documents = new DocumentsService(this.request);
     this.organizations = new OrganizationsService(this.request);
     this.projects = new ProjectsService(this.request);
     this.users = new UsersService(this.request);
+    this.widget = new WidgetService(this.request);
   }
 }

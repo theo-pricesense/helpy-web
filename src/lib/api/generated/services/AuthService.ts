@@ -19,7 +19,6 @@ export class AuthService {
    * @throws ApiError
    */
   public sendCode(requestBody: SendCodeDto): CancelablePromise<any> {
-    console.log(requestBody);
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/send-code",
