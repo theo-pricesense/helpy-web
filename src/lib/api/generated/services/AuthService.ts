@@ -5,20 +5,25 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { AuthResponseDto } from "../models/AuthResponseDto";
 import type { LoginDto } from "../models/LoginDto";
+import type { MessageResponseDto } from "../models/MessageResponseDto";
 import type { RefreshDto } from "../models/RefreshDto";
 import type { SendCodeDto } from "../models/SendCodeDto";
 import type { SignupDto } from "../models/SignupDto";
+import type { TokenResponseDto } from "../models/TokenResponseDto";
 import type { VerifyCodeDto } from "../models/VerifyCodeDto";
 export class AuthService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 인증 코드 발송
    * @param requestBody
-   * @returns any
+   * @returns MessageResponseDto
    * @throws ApiError
    */
-  public sendCode(requestBody: SendCodeDto): CancelablePromise<any> {
+  public sendCode(
+    requestBody: SendCodeDto,
+  ): CancelablePromise<MessageResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/send-code",
@@ -29,10 +34,12 @@ export class AuthService {
   /**
    * 인증 코드 확인
    * @param requestBody
-   * @returns any
+   * @returns TokenResponseDto
    * @throws ApiError
    */
-  public verifyCode(requestBody: VerifyCodeDto): CancelablePromise<any> {
+  public verifyCode(
+    requestBody: VerifyCodeDto,
+  ): CancelablePromise<TokenResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/verify-code",
@@ -43,10 +50,10 @@ export class AuthService {
   /**
    * 회원가입
    * @param requestBody
-   * @returns any
+   * @returns AuthResponseDto
    * @throws ApiError
    */
-  public signup(requestBody: SignupDto): CancelablePromise<any> {
+  public signup(requestBody: SignupDto): CancelablePromise<AuthResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/signup",
@@ -57,10 +64,10 @@ export class AuthService {
   /**
    * 로그인
    * @param requestBody
-   * @returns any
+   * @returns AuthResponseDto
    * @throws ApiError
    */
-  public login(requestBody: LoginDto): CancelablePromise<any> {
+  public login(requestBody: LoginDto): CancelablePromise<AuthResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/login",
@@ -71,10 +78,10 @@ export class AuthService {
   /**
    * 토큰 갱신
    * @param requestBody
-   * @returns any
+   * @returns AuthResponseDto
    * @throws ApiError
    */
-  public refresh(requestBody: RefreshDto): CancelablePromise<any> {
+  public refresh(requestBody: RefreshDto): CancelablePromise<AuthResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/refresh",
@@ -85,10 +92,12 @@ export class AuthService {
   /**
    * 로그아웃
    * @param requestBody
-   * @returns any
+   * @returns MessageResponseDto
    * @throws ApiError
    */
-  public logout(requestBody: RefreshDto): CancelablePromise<any> {
+  public logout(
+    requestBody: RefreshDto,
+  ): CancelablePromise<MessageResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/auth/logout",

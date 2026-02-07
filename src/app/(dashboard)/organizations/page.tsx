@@ -1,7 +1,8 @@
 "use client";
 
-import { Building2, Loader2, Users } from "lucide-react";
+import { Building2, Crown, Loader2, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 import {
   Card,
@@ -72,9 +73,14 @@ export default function OrganizationsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <Users className="h-4 w-4" />
-                  <span>{org.memberCount ?? 0} members</span>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="gap-1">
+                    {org.role === "OWNER" && <Crown className="h-3 w-3" />}
+                    {org.role === "ADMIN" && <Shield className="h-3 w-3" />}
+                    {org.role === "MEMBER" && <User className="h-3 w-3" />}
+                    {org.role}
+                  </Badge>
+                  <Badge variant="outline">{org.plan}</Badge>
                 </div>
               </CardContent>
             </Card>

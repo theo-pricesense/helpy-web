@@ -6,16 +6,19 @@
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import type { CreateProjectDto } from "../models/CreateProjectDto";
+import type { ProjectResponseDto } from "../models/ProjectResponseDto";
 import type { UpdateProjectDto } from "../models/UpdateProjectDto";
 export class ProjectsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 프로젝트 생성
    * @param requestBody
-   * @returns any
+   * @returns ProjectResponseDto
    * @throws ApiError
    */
-  public createProject(requestBody: CreateProjectDto): CancelablePromise<any> {
+  public createProject(
+    requestBody: CreateProjectDto,
+  ): CancelablePromise<ProjectResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/projects",
@@ -26,10 +29,12 @@ export class ProjectsService {
   /**
    * 프로젝트 목록 조회
    * @param organizationId
-   * @returns any
+   * @returns ProjectResponseDto
    * @throws ApiError
    */
-  public getProjects(organizationId: string): CancelablePromise<any> {
+  public getProjects(
+    organizationId: string,
+  ): CancelablePromise<Array<ProjectResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects",
@@ -41,10 +46,10 @@ export class ProjectsService {
   /**
    * 프로젝트 상세 조회
    * @param id
-   * @returns any
+   * @returns ProjectResponseDto
    * @throws ApiError
    */
-  public getProject(id: string): CancelablePromise<any> {
+  public getProject(id: string): CancelablePromise<ProjectResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects/{id}",
@@ -57,13 +62,13 @@ export class ProjectsService {
    * 프로젝트 수정
    * @param id
    * @param requestBody
-   * @returns any
+   * @returns ProjectResponseDto
    * @throws ApiError
    */
   public updateProject(
     id: string,
     requestBody: UpdateProjectDto,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<ProjectResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
       url: "/projects/{id}",
@@ -92,10 +97,10 @@ export class ProjectsService {
   /**
    * API 키 재발급
    * @param id
-   * @returns any
+   * @returns ProjectResponseDto
    * @throws ApiError
    */
-  public regenerateApiKey(id: string): CancelablePromise<any> {
+  public regenerateApiKey(id: string): CancelablePromise<ProjectResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/projects/{id}/regenerate-key",

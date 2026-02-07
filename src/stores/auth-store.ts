@@ -2,23 +2,18 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+import type { AuthUserDto } from "@/lib/api/generated";
 
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user: User | null;
+  user: AuthUserDto | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (accessToken: string, refreshToken: string, user: User) => void;
+  login: (accessToken: string, refreshToken: string, user: AuthUserDto) => void;
   logout: () => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
-  setUser: (user: User) => void;
+  setUser: (user: AuthUserDto) => void;
   fetchUser: () => Promise<void>;
 }
 

@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { organizationsApi } from "@/lib/api";
-import type { UpdateOrganizationDto } from "@/lib/api/generated";
-import type { Organization } from "@/lib/types";
+import type {
+  OrganizationResponseDto,
+  OrganizationWithRoleResponseDto,
+  UpdateOrganizationDto,
+} from "@/lib/api/generated";
 
 export const organizationKeys = {
   all: ["organizations"] as const,
@@ -12,14 +15,14 @@ export const organizationKeys = {
 };
 
 export function useOrganizations() {
-  return useQuery<Organization[]>({
+  return useQuery<OrganizationWithRoleResponseDto[]>({
     queryKey: organizationKeys.list(),
     queryFn: () => organizationsApi.getMyOrganizations(),
   });
 }
 
 export function useOrganization(id: string) {
-  return useQuery<Organization>({
+  return useQuery<OrganizationResponseDto>({
     queryKey: organizationKeys.detail(id),
     queryFn: () => organizationsApi.getOrganization(id),
     enabled: !!id,

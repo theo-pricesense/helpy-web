@@ -41,7 +41,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { projectsApi } from "@/lib/api";
-import type { Project } from "@/lib/types";
+import type { ProjectResponseDto } from "@/lib/api/generated";
 
 const updateProjectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -54,7 +54,7 @@ export default function ProjectDetailPage() {
   const router = useRouter();
   const projectId = params.projectId as string;
 
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<ProjectResponseDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -178,12 +178,12 @@ export default function ProjectDetailPage() {
                   <Badge
                     variant="default"
                     className={
-                      project.status === "active"
+                      project.status === "ACTIVE"
                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                         : ""
                     }
                   >
-                    {project.status === "active" && (
+                    {project.status === "ACTIVE" && (
                       <Zap className="h-3 w-3 mr-1" />
                     )}
                     {project.status}

@@ -5,15 +5,19 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { OrganizationResponseDto } from "../models/OrganizationResponseDto";
+import type { OrganizationWithRoleResponseDto } from "../models/OrganizationWithRoleResponseDto";
 import type { UpdateOrganizationDto } from "../models/UpdateOrganizationDto";
 export class OrganizationsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 내 조직 목록 조회
-   * @returns any
+   * @returns OrganizationWithRoleResponseDto
    * @throws ApiError
    */
-  public getMyOrganizations(): CancelablePromise<any> {
+  public getMyOrganizations(): CancelablePromise<
+    Array<OrganizationWithRoleResponseDto>
+  > {
     return this.httpRequest.request({
       method: "GET",
       url: "/organizations/me",
@@ -22,10 +26,12 @@ export class OrganizationsService {
   /**
    * 조직 상세 조회
    * @param id
-   * @returns any
+   * @returns OrganizationResponseDto
    * @throws ApiError
    */
-  public getOrganization(id: string): CancelablePromise<any> {
+  public getOrganization(
+    id: string,
+  ): CancelablePromise<OrganizationResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/organizations/{id}",
@@ -38,13 +44,13 @@ export class OrganizationsService {
    * 조직 정보 수정
    * @param id
    * @param requestBody
-   * @returns any
+   * @returns OrganizationResponseDto
    * @throws ApiError
    */
   public updateOrganization(
     id: string,
     requestBody: UpdateOrganizationDto,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<OrganizationResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
       url: "/organizations/{id}",

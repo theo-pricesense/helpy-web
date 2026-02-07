@@ -32,7 +32,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { organizationsApi, projectsApi } from "@/lib/api";
-import type { Organization, Project } from "@/lib/types";
+import type {
+  OrganizationResponseDto,
+  ProjectResponseDto,
+} from "@/lib/api/generated";
 
 const createProjectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -45,8 +48,9 @@ export default function ProjectsPage() {
   const router = useRouter();
   const orgId = params.orgId as string;
 
-  const [organization, setOrganization] = useState<Organization | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [organization, setOrganization] =
+    useState<OrganizationResponseDto | null>(null);
+  const [projects, setProjects] = useState<ProjectResponseDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -229,15 +233,15 @@ export default function ProjectsPage() {
                   {project.status && (
                     <Badge
                       variant={
-                        project.status === "active" ? "default" : "secondary"
+                        project.status === "ACTIVE" ? "default" : "secondary"
                       }
                       className={
-                        project.status === "active"
+                        project.status === "ACTIVE"
                           ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                           : ""
                       }
                     >
-                      {project.status === "active" && (
+                      {project.status === "ACTIVE" && (
                         <Zap className="h-3 w-3 mr-1" />
                       )}
                       {project.status}

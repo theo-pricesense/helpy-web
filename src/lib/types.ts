@@ -1,15 +1,13 @@
-export interface Organization {
-  id: string;
-  name: string;
-  createdAt: string;
-  memberCount?: number;
-}
-
-export interface Project {
-  id: string;
-  name: string;
-  organizationId: string;
-  apiKey?: string;
-  status?: "active" | "inactive";
-  createdAt: string;
-}
+// Re-export generated types for convenience
+export type {
+  AuthResponseDto as AuthResponse,
+  AuthUserDto as User,
+  ConversationDetailResponseDto as ConversationDetail,
+  ConversationResponseDto as Conversation,
+  MessageResponseDto as Message,
+  OrganizationResponseDto as Organization,
+  OrganizationWithRoleResponseDto as OrganizationWithRole,
+  ProjectResponseDto as Project,
+  ProjectSettingsDto as ProjectSettings,
+  UserResponseDto as UserProfile,
+} from "./api/generated";

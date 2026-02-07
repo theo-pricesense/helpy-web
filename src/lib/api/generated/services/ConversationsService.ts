@@ -5,16 +5,20 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { ConversationDetailResponseDto } from "../models/ConversationDetailResponseDto";
+import type { ConversationResponseDto } from "../models/ConversationResponseDto";
 import type { UpdateConversationDto } from "../models/UpdateConversationDto";
 export class ConversationsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 대화 목록 조회
    * @param projectId
-   * @returns any
+   * @returns ConversationResponseDto
    * @throws ApiError
    */
-  public getConversations(projectId: string): CancelablePromise<any> {
+  public getConversations(
+    projectId: string,
+  ): CancelablePromise<Array<ConversationResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects/{projectId}/conversations",
@@ -27,13 +31,13 @@ export class ConversationsService {
    * 대화 상세 조회 (메시지 포함)
    * @param projectId
    * @param conversationId
-   * @returns any
+   * @returns ConversationDetailResponseDto
    * @throws ApiError
    */
   public getConversation(
     projectId: string,
     conversationId: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<ConversationDetailResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/projects/{projectId}/conversations/{conversationId}",
@@ -48,14 +52,14 @@ export class ConversationsService {
    * @param projectId
    * @param conversationId
    * @param requestBody
-   * @returns any
+   * @returns ConversationResponseDto
    * @throws ApiError
    */
   public updateConversation(
     projectId: string,
     conversationId: string,
     requestBody: UpdateConversationDto,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<ConversationResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
       url: "/projects/{projectId}/conversations/{conversationId}",
