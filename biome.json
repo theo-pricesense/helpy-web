@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!**/*.css"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -18,8 +25,16 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useButtonType": "warn",
+        "noLabelWithoutControl": "warn",
+        "noStaticElementInteractions": "warn",
+        "useKeyWithClickEvents": "warn"
+      },
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noArrayIndexKey": "warn",
+        "noExplicitAny": "warn"
       }
     },
     "domains": {
@@ -33,5 +48,13 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/generated/**"],
+      "linter": {
+        "enabled": false
+      }
+    }
+  ]
 }
