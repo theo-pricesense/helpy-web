@@ -51,7 +51,7 @@ export async function getOrganizations(
   request: APIRequestContext,
   accessToken: string,
 ): Promise<Organization[]> {
-  const response = await request.get(`${API_BASE_URL}/organizations`, {
+  const response = await request.get(`${API_BASE_URL}/organizations/me`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
@@ -68,7 +68,7 @@ export async function getProjects(
   organizationId: string,
 ): Promise<Project[]> {
   const response = await request.get(
-    `${API_BASE_URL}/organizations/${organizationId}/projects`,
+    `${API_BASE_URL}/projects?organizationId=${organizationId}`,
     {
       headers: { Authorization: `Bearer ${accessToken}` },
     },

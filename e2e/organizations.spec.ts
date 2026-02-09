@@ -15,7 +15,9 @@ test.describe("Organizations", () => {
   }) => {
     await page.goto("/organizations");
 
-    await expect(page.getByText("Organizations")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Organizations" }),
+    ).toBeVisible();
     await expect(
       page.getByText("Select an organization to manage projects."),
     ).toBeVisible();
