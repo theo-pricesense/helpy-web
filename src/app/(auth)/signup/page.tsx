@@ -156,6 +156,7 @@ export default function SignupPage() {
       {step === 0 && (
         <form
           onSubmit={emailForm.handleSubmit(handleSendCode)}
+          noValidate
           className="space-y-5"
         >
           <div className="space-y-2">
