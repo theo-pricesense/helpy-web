@@ -15,6 +15,7 @@ export type { AuthUserDto } from "./models/AuthUserDto";
 export type { ChangePasswordDto } from "./models/ChangePasswordDto";
 export type { ChunkSearchResultDto } from "./models/ChunkSearchResultDto";
 export { ConversationDetailResponseDto } from "./models/ConversationDetailResponseDto";
+export { ConversationMessageResponseDto } from "./models/ConversationMessageResponseDto";
 export { ConversationResponseDto } from "./models/ConversationResponseDto";
 export type { CreateTextDocumentDto } from "./models/CreateTextDocumentDto";
 export type { CreateUrlDocumentDto } from "./models/CreateUrlDocumentDto";

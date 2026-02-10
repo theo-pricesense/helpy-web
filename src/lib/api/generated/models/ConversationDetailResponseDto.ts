@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { MessageResponseDto } from "./MessageResponseDto";
+import type { ConversationMessageResponseDto } from "./ConversationMessageResponseDto";
 export type ConversationDetailResponseDto = {
   /**
    * 대화 ID
@@ -47,7 +47,7 @@ export type ConversationDetailResponseDto = {
   /**
    * 메시지 목록
    */
-  messages: Array<MessageResponseDto>;
+  messages: Array<ConversationMessageResponseDto>;
 };
 export namespace ConversationDetailResponseDto {
   /**
