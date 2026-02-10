@@ -44,7 +44,7 @@ test.describe("Login", () => {
     await page.getByLabel("비밀번호").fill(TEST_PASSWORD!);
     await page.getByRole("button", { name: "로그인" }).click();
 
-    await expect(page).toHaveURL("/organizations", { timeout: 10000 });
+    await expect(page).toHaveURL("/workspaces", { timeout: 10000 });
   });
 
   test("should have a link to signup page", async ({ page }) => {

@@ -19,12 +19,10 @@ interface Organization {
   memberCount?: number;
 }
 
-interface Project {
+interface Workspace {
   id: string;
   name: string;
-  organizationId: string;
-  apiKey: string;
-  status: "active" | "inactive";
+  status: "ACTIVE" | "INACTIVE";
   createdAt: string;
 }
 
@@ -62,20 +60,20 @@ export async function getOrganizations(
   return response.json();
 }
 
-export async function getProjects(
+export async function getWorkspaces(
   request: APIRequestContext,
   accessToken: string,
   organizationId: string,
-): Promise<Project[]> {
-  const response = await request.get(
-    `${API_BASE_URL}/projects?organizationId=${organizationId}`,
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
+): Promise<Workspace[]> {
+  const response = await request.get(`${API_BASE_URL}/workspaces`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-Organization-Id": organizationId,
     },
-  );
+  });
 
   if (!response.ok()) {
-    throw new Error(`Failed to get projects: ${response.status()}`);
+    throw new Error(`Failed to get workspaces: ${response.status()}`);
   }
 
   return response.json();
