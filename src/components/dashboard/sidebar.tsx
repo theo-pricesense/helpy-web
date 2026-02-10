@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HelpyLogo } from "@/components/helpy-logo";
 import { NotificationCenter } from "@/components/notification-center";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { organizationsApi, workspacesApi } from "@/lib/api";
+import { useWorkspaces } from "@/hooks/use-workspaces";
 import { WorkspaceResponseDto } from "@/lib/api/generated";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
@@ -55,7 +55,7 @@ export function DashboardSidebar() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
 
-  const [workspaces, setWorkspaces] = useState<WorkspaceResponseDto[]>([]);
+  const { data: workspaces = [] } = useWorkspaces();
   const [expandedWorkspace, setExpandedWorkspace] = useState<string | null>(
     null,
   );
@@ -68,53 +68,6 @@ export function DashboardSidebar() {
         .toUpperCase()
         .slice(0, 2)
     : "U";
-
-  const loadWorkspaces = useCallback(async () => {
-    try {
-      const orgs = await organizationsApi.getMyOrganizations();
-      if (orgs.length > 0) {
-        const data = await workspacesApi.getWorkspaces(orgs[0].id);
-        setWorkspaces(data);
-      }
-    } catch {
-      setWorkspaces([
-        {
-          id: "ws-1",
-          organizationId: "org-1",
-          name: "Customer Portal",
-          apiKey: "hpy_live_xxx",
-          status: WorkspaceResponseDto.status.ACTIVE,
-          settings: {},
-          createdAt: "2025-03-10T00:00:00Z",
-          updatedAt: "2025-03-10T00:00:00Z",
-        },
-        {
-          id: "ws-2",
-          organizationId: "org-1",
-          name: "Internal Helpdesk",
-          apiKey: "hpy_live_yyy",
-          status: WorkspaceResponseDto.status.ACTIVE,
-          settings: {},
-          createdAt: "2025-05-22T00:00:00Z",
-          updatedAt: "2025-05-22T00:00:00Z",
-        },
-        {
-          id: "ws-3",
-          organizationId: "org-1",
-          name: "Legacy Support",
-          apiKey: "hpy_live_zzz",
-          status: WorkspaceResponseDto.status.INACTIVE,
-          settings: {},
-          createdAt: "2024-11-01T00:00:00Z",
-          updatedAt: "2024-11-01T00:00:00Z",
-        },
-      ]);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadWorkspaces();
-  }, [loadWorkspaces]);
 
   useEffect(() => {
     const match = pathname.match(/\/workspaces\/([^/]+)/);

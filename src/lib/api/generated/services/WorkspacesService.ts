@@ -12,60 +12,74 @@ export class WorkspacesService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 워크스페이스 생성
+   * @param xOrganizationId 조직 ID
    * @param requestBody
    * @returns WorkspaceResponseDto
    * @throws ApiError
    */
   public createWorkspace(
+    xOrganizationId: string,
     requestBody: CreateWorkspaceDto,
   ): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/workspaces",
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
       body: requestBody,
       mediaType: "application/json",
     });
   }
   /**
    * 워크스페이스 목록 조회
-   * @param organizationId
+   * @param xOrganizationId 조직 ID
    * @returns WorkspaceResponseDto
    * @throws ApiError
    */
   public getWorkspaces(
-    organizationId: string,
+    xOrganizationId: string,
   ): CancelablePromise<Array<WorkspaceResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
       url: "/workspaces",
-      query: {
-        organizationId: organizationId,
+      headers: {
+        "X-Organization-Id": xOrganizationId,
       },
     });
   }
   /**
    * 워크스페이스 상세 조회
+   * @param xOrganizationId 조직 ID
    * @param id
    * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public getWorkspace(id: string): CancelablePromise<WorkspaceResponseDto> {
+  public getWorkspace(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/workspaces/{id}",
       path: {
         id: id,
       },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
     });
   }
   /**
    * 워크스페이스 수정
+   * @param xOrganizationId 조직 ID
    * @param id
    * @param requestBody
    * @returns WorkspaceResponseDto
    * @throws ApiError
    */
   public updateWorkspace(
+    xOrganizationId: string,
     id: string,
     requestBody: UpdateWorkspaceDto,
   ): CancelablePromise<WorkspaceResponseDto> {
@@ -75,37 +89,54 @@ export class WorkspacesService {
       path: {
         id: id,
       },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
       body: requestBody,
       mediaType: "application/json",
     });
   }
   /**
    * 워크스페이스 삭제
+   * @param xOrganizationId 조직 ID
    * @param id
    * @returns void
    * @throws ApiError
    */
-  public deleteWorkspace(id: string): CancelablePromise<void> {
+  public deleteWorkspace(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<void> {
     return this.httpRequest.request({
       method: "DELETE",
       url: "/workspaces/{id}",
       path: {
         id: id,
       },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
     });
   }
   /**
    * API 키 재발급
+   * @param xOrganizationId 조직 ID
    * @param id
    * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public regenerateApiKey(id: string): CancelablePromise<WorkspaceResponseDto> {
+  public regenerateApiKey(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "POST",
       url: "/workspaces/{id}/regenerate-key",
       path: {
         id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
       },
     });
   }

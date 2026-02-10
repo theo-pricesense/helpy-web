@@ -1,4 +1,8 @@
 import { useAuthStore } from "@/stores/auth-store";
+import {
+  getCurrentOrgId,
+  useOrganizationStore,
+} from "@/stores/organization-store";
 import { ApiClient } from "./generated";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -80,35 +84,71 @@ export const apiClient = new ApiClient({
     const token = await getValidAccessToken();
     return token ?? "";
   },
+  HEADERS: async () => {
+    const orgId = getCurrentOrgId();
+    const headers: Record<string, string> = {};
+    if (orgId) {
+      headers["X-Organization-Id"] = orgId;
+    }
+    return headers;
+  },
 });
 
-// Export a function to handle 401 errors and retry
+// Handle 403 organization error - refresh org and retry
+async function handleOrganizationError<T>(
+  request: () => Promise<T>,
+): Promise<T> {
+  try {
+    // Fetch organizations and set the first one
+    const response = await fetch(`${API_BASE_URL}/organizations/me`, {
+      headers: {
+        Authorization: `Bearer ${useAuthStore.getState().accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const orgs = await response.json();
+      if (orgs.length > 0) {
+        useOrganizationStore.getState().setCurrentOrgId(orgs[0].id);
+        // Retry the original request
+        return await request();
+      }
+    }
+  } catch {
+    // If refresh fails, throw original error
+  }
+  throw new Error("No valid organization found");
+}
+
+// Export a function to handle 401/403 errors and retry
 export async function withTokenRefresh<T>(
   request: () => Promise<T>,
 ): Promise<T> {
   try {
     return await request();
   } catch (error: unknown) {
-    // Check if it's a 401 error
-    if (
-      error &&
-      typeof error === "object" &&
-      "status" in error &&
-      error.status === 401
-    ) {
-      // Try to refresh the token
-      if (!isRefreshing) {
-        isRefreshing = true;
-        refreshPromise = refreshAccessToken().finally(() => {
-          isRefreshing = false;
-          refreshPromise = null;
-        });
+    if (error && typeof error === "object" && "status" in error) {
+      // Check if it's a 401 error
+      if (error.status === 401) {
+        // Try to refresh the token
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshPromise = refreshAccessToken().finally(() => {
+            isRefreshing = false;
+            refreshPromise = null;
+          });
+        }
+
+        const newToken = await refreshPromise;
+        if (newToken) {
+          // Retry the original request
+          return await request();
+        }
       }
 
-      const newToken = await refreshPromise;
-      if (newToken) {
-        // Retry the original request
-        return await request();
+      // Check if it's a 403 error (organization issue)
+      if (error.status === 403) {
+        return await handleOrganizationError(request);
       }
     }
     throw error;

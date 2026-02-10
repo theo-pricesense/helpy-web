@@ -5,6 +5,7 @@ import type {
   UpdateWorkspaceDto,
   WorkspaceResponseDto,
 } from "@/lib/api/generated";
+import { useOrganizationStore } from "@/stores/organization-store";
 
 export const workspaceKeys = {
   all: ["workspaces"] as const,
@@ -14,19 +15,23 @@ export const workspaceKeys = {
   detail: (id: string) => [...workspaceKeys.details(), id] as const,
 };
 
-export function useWorkspaces(organizationId: string) {
+export function useWorkspaces() {
+  const currentOrgId = useOrganizationStore((s) => s.currentOrgId);
+
   return useQuery<WorkspaceResponseDto[]>({
-    queryKey: workspaceKeys.list(organizationId),
-    queryFn: () => workspacesApi.getWorkspaces(organizationId),
-    enabled: !!organizationId,
+    queryKey: workspaceKeys.list(currentOrgId ?? ""),
+    queryFn: () => workspacesApi.getWorkspaces(),
+    enabled: !!currentOrgId,
   });
 }
 
 export function useWorkspace(id: string) {
+  const currentOrgId = useOrganizationStore((s) => s.currentOrgId);
+
   return useQuery<WorkspaceResponseDto>({
     queryKey: workspaceKeys.detail(id),
     queryFn: () => workspacesApi.getWorkspace(id),
-    enabled: !!id,
+    enabled: !!id && !!currentOrgId,
   });
 }
 

@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useOrganizations } from "@/hooks/use-organizations";
 import { useCreateWorkspace, useWorkspaces } from "@/hooks/use-workspaces";
 import { WorkspaceResponseDto } from "@/lib/api/generated";
 
@@ -35,10 +34,7 @@ export default function WorkspacesPage() {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const { data: organizations } = useOrganizations();
-  const defaultOrgId = organizations?.[0]?.id ?? "";
-
-  const { data: workspaces = [], isLoading } = useWorkspaces(defaultOrgId);
+  const { data: workspaces = [], isLoading } = useWorkspaces();
   const createMutation = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceForm>({
@@ -47,9 +43,8 @@ export default function WorkspacesPage() {
   });
 
   const handleCreate = (data: CreateWorkspaceForm) => {
-    if (!defaultOrgId) return;
     createMutation.mutate(
-      { name: data.name, organizationId: defaultOrgId },
+      { name: data.name },
       {
         onSuccess: (created) => {
           setCreateOpen(false);

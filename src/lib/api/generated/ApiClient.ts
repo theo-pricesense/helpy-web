@@ -8,6 +8,7 @@ import type { OpenAPIConfig } from "./core/OpenAPI";
 import { AppService } from "./services/AppService";
 import { AuthService } from "./services/AuthService";
 import { ConversationsService } from "./services/ConversationsService";
+import { CustomersService } from "./services/CustomersService";
 import { DocumentsService } from "./services/DocumentsService";
 import { HealthService } from "./services/HealthService";
 import { OrganizationsService } from "./services/OrganizationsService";
@@ -20,6 +21,7 @@ export class ApiClient {
   public readonly app: AppService;
   public readonly auth: AuthService;
   public readonly conversations: ConversationsService;
+  public readonly customers: CustomersService;
   public readonly documents: DocumentsService;
   public readonly health: HealthService;
   public readonly organizations: OrganizationsService;
@@ -45,6 +47,7 @@ export class ApiClient {
     this.app = new AppService(this.request);
     this.auth = new AuthService(this.request);
     this.conversations = new ConversationsService(this.request);
+    this.customers = new CustomersService(this.request);
     this.documents = new DocumentsService(this.request);
     this.health = new HealthService(this.request);
     this.organizations = new OrganizationsService(this.request);
