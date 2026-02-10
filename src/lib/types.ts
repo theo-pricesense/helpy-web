@@ -1,4 +1,5 @@
 // Re-export generated types for convenience
+// Alias for backward compatibility
 export type {
   AuthResponseDto as AuthResponse,
   AuthUserDto as User,
@@ -7,7 +8,8 @@ export type {
   MessageResponseDto as Message,
   OrganizationResponseDto as Organization,
   OrganizationWithRoleResponseDto as OrganizationWithRole,
-  ProjectResponseDto as Project,
-  ProjectSettingsDto as ProjectSettings,
   UserResponseDto as UserProfile,
+  WorkspaceResponseDto as Workspace,
+  WorkspaceResponseDto as Project,
+  WorkspaceSettingsDto as WorkspaceSettings,
 } from "./api/generated";

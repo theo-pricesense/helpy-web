@@ -1,8 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FolderKanban, Loader2, Plus, Search, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,85 +20,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { projectsApi } from "@/lib/api";
-import type { Project } from "@/lib/types";
+import { useOrganizations } from "@/hooks/use-organizations";
+import { useCreateWorkspace, useWorkspaces } from "@/hooks/use-workspaces";
+import { WorkspaceResponseDto } from "@/lib/api/generated";
+
+const createWorkspaceSchema = z.object({
+  name: z.string().min(1, "워크스페이스 이름을 입력해주세요."),
+});
+
+type CreateWorkspaceForm = z.infer<typeof createWorkspaceSchema>;
 
 export default function WorkspacesPage() {
   const router = useRouter();
-  const [workspaces, setWorkspaces] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
 
-  const loadWorkspaces = useCallback(async () => {
-    try {
-      const data = await projectsApi.listProjects("default");
-      setWorkspaces(data);
-    } catch {
-      setWorkspaces([
-        {
-          id: "ws-1",
-          organizationId: "default",
-          name: "Customer Portal",
-          apiKey: "hpy_live_abc123",
-          status: "active",
-          createdAt: "2025-03-10T00:00:00Z",
-        },
-        {
-          id: "ws-2",
-          organizationId: "default",
-          name: "Internal Helpdesk",
-          apiKey: "hpy_live_def456",
-          status: "active",
-          createdAt: "2025-06-15T00:00:00Z",
-        },
-        {
-          id: "ws-3",
-          organizationId: "default",
-          name: "E-commerce Support",
-          apiKey: "hpy_live_ghi789",
-          status: "inactive",
-          createdAt: "2025-08-20T00:00:00Z",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const { data: organizations } = useOrganizations();
+  const defaultOrgId = organizations?.[0]?.id ?? "";
 
-  useEffect(() => {
-    loadWorkspaces();
-  }, [loadWorkspaces]);
+  const { data: workspaces = [], isLoading } = useWorkspaces(defaultOrgId);
+  const createMutation = useCreateWorkspace();
 
-  const handleCreate = async () => {
-    if (!newName.trim()) return;
-    setIsCreating(true);
-    try {
-      const created = await projectsApi.createProject("default", {
-        name: newName,
-      });
-      setWorkspaces((prev) => [created, ...prev]);
-      setCreateOpen(false);
-      setNewName("");
-      router.push(`/workspaces/${created.id}`);
-    } catch {
-      const demo: Project = {
-        id: `ws-${Date.now()}`,
-        organizationId: "default",
-        name: newName,
-        apiKey: `hpy_live_${Math.random().toString(36).slice(2, 10)}`,
-        status: "active",
-        createdAt: new Date().toISOString(),
-      };
-      setWorkspaces((prev) => [demo, ...prev]);
-      setCreateOpen(false);
-      setNewName("");
-      router.push(`/workspaces/${demo.id}`);
-    } finally {
-      setIsCreating(false);
-    }
+  const form = useForm<CreateWorkspaceForm>({
+    resolver: zodResolver(createWorkspaceSchema),
+    defaultValues: { name: "" },
+  });
+
+  const handleCreate = (data: CreateWorkspaceForm) => {
+    if (!defaultOrgId) return;
+    createMutation.mutate(
+      { name: data.name, organizationId: defaultOrgId },
+      {
+        onSuccess: (created) => {
+          setCreateOpen(false);
+          form.reset();
+          router.push(`/workspaces/${created.id}`);
+        },
+      },
+    );
   };
 
   const filtered = workspaces.filter((ws) =>
@@ -129,37 +91,43 @@ export default function WorkspacesPage() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create Workspace</DialogTitle>
-              <DialogDescription>
-                A workspace represents one product or service channel.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-2 py-4">
-              <Label htmlFor="ws-name">Workspace Name</Label>
-              <Input
-                id="ws-name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="e.g. Customer Portal"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleCreate();
-                }}
-              />
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                onClick={handleCreate}
-                disabled={!newName.trim() || isCreating}
-              >
-                {isCreating && <Loader2 className="animate-spin" />}
-                Create
-              </Button>
-            </DialogFooter>
+            <form onSubmit={form.handleSubmit(handleCreate)}>
+              <DialogHeader>
+                <DialogTitle>Create Workspace</DialogTitle>
+                <DialogDescription>
+                  A workspace represents one product or service channel.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2 py-4">
+                <Label htmlFor="ws-name">Workspace Name</Label>
+                <Input
+                  id="ws-name"
+                  placeholder="e.g. Customer Portal"
+                  autoFocus
+                  {...form.register("name")}
+                />
+                {form.formState.errors.name && (
+                  <p className="text-sm text-destructive">
+                    {form.formState.errors.name.message}
+                  </p>
+                )}
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setCreateOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createMutation.isPending}>
+                  {createMutation.isPending && (
+                    <Loader2 className="animate-spin" />
+                  )}
+                  Create
+                </Button>
+              </DialogFooter>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -206,12 +174,14 @@ export default function WorkspacesPage() {
                   <Badge
                     variant="outline"
                     className={
-                      ws.status === "active"
+                      ws.status === WorkspaceResponseDto.status.ACTIVE
                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                         : ""
                     }
                   >
-                    {ws.status === "active" && <Zap className="h-3 w-3 mr-1" />}
+                    {ws.status === WorkspaceResponseDto.status.ACTIVE && (
+                      <Zap className="h-3 w-3 mr-1" />
+                    )}
                     {ws.status}
                   </Badge>
                 </div>
