@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import type {
+  CreateTextDocumentDto,
   CreateUrlDocumentDto,
   DocumentResponseDto,
 } from "@/lib/api/generated";
@@ -29,6 +30,23 @@ export function useDocument(documentId: string) {
     queryFn: () =>
       apiClient.documents.documentsControllerGetDocument(documentId),
     enabled: !!documentId,
+  });
+}
+
+export function useCreateTextDocument(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateTextDocumentDto) =>
+      apiClient.documents.documentsControllerCreateTextDocument(
+        projectId,
+        data,
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: documentKeys.list(projectId),
+      });
+    },
   });
 }
 
