@@ -25,6 +25,7 @@ export { DocumentResponseDto } from "./models/DocumentResponseDto";
 export { InviteMemberDto } from "./models/InviteMemberDto";
 export type { LoginDto } from "./models/LoginDto";
 export type { MessageResponseDto } from "./models/MessageResponseDto";
+export { OrganizationInvitationResponseDto } from "./models/OrganizationInvitationResponseDto";
 export { OrganizationMemberResponseDto } from "./models/OrganizationMemberResponseDto";
 export { OrganizationResponseDto } from "./models/OrganizationResponseDto";
 export { OrganizationWithRoleResponseDto } from "./models/OrganizationWithRoleResponseDto";
