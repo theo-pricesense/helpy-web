@@ -9,9 +9,9 @@ export type ConversationDetailResponseDto = {
    */
   id: string;
   /**
-   * 프로젝트 ID
+   * 워크스페이스 ID
    */
-  projectId: string;
+  workspaceId: string;
   /**
    * 고객 ID
    */

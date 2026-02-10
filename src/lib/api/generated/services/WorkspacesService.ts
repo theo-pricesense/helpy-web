@@ -5,73 +5,73 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
-import type { CreateProjectDto } from "../models/CreateProjectDto";
-import type { ProjectResponseDto } from "../models/ProjectResponseDto";
-import type { UpdateProjectDto } from "../models/UpdateProjectDto";
-export class ProjectsService {
+import type { CreateWorkspaceDto } from "../models/CreateWorkspaceDto";
+import type { UpdateWorkspaceDto } from "../models/UpdateWorkspaceDto";
+import type { WorkspaceResponseDto } from "../models/WorkspaceResponseDto";
+export class WorkspacesService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
-   * 프로젝트 생성
+   * 워크스페이스 생성
    * @param requestBody
-   * @returns ProjectResponseDto
+   * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public createProject(
-    requestBody: CreateProjectDto,
-  ): CancelablePromise<ProjectResponseDto> {
+  public createWorkspace(
+    requestBody: CreateWorkspaceDto,
+  ): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects",
+      url: "/workspaces",
       body: requestBody,
       mediaType: "application/json",
     });
   }
   /**
-   * 프로젝트 목록 조회
+   * 워크스페이스 목록 조회
    * @param organizationId
-   * @returns ProjectResponseDto
+   * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public getProjects(
+  public getWorkspaces(
     organizationId: string,
-  ): CancelablePromise<Array<ProjectResponseDto>> {
+  ): CancelablePromise<Array<WorkspaceResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects",
+      url: "/workspaces",
       query: {
         organizationId: organizationId,
       },
     });
   }
   /**
-   * 프로젝트 상세 조회
+   * 워크스페이스 상세 조회
    * @param id
-   * @returns ProjectResponseDto
+   * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public getProject(id: string): CancelablePromise<ProjectResponseDto> {
+  public getWorkspace(id: string): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{id}",
+      url: "/workspaces/{id}",
       path: {
         id: id,
       },
     });
   }
   /**
-   * 프로젝트 수정
+   * 워크스페이스 수정
    * @param id
    * @param requestBody
-   * @returns ProjectResponseDto
+   * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public updateProject(
+  public updateWorkspace(
     id: string,
-    requestBody: UpdateProjectDto,
-  ): CancelablePromise<ProjectResponseDto> {
+    requestBody: UpdateWorkspaceDto,
+  ): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
-      url: "/projects/{id}",
+      url: "/workspaces/{id}",
       path: {
         id: id,
       },
@@ -80,15 +80,15 @@ export class ProjectsService {
     });
   }
   /**
-   * 프로젝트 삭제
+   * 워크스페이스 삭제
    * @param id
    * @returns void
    * @throws ApiError
    */
-  public deleteProject(id: string): CancelablePromise<void> {
+  public deleteWorkspace(id: string): CancelablePromise<void> {
     return this.httpRequest.request({
       method: "DELETE",
-      url: "/projects/{id}",
+      url: "/workspaces/{id}",
       path: {
         id: id,
       },
@@ -97,13 +97,13 @@ export class ProjectsService {
   /**
    * API 키 재발급
    * @param id
-   * @returns ProjectResponseDto
+   * @returns WorkspaceResponseDto
    * @throws ApiError
    */
-  public regenerateApiKey(id: string): CancelablePromise<ProjectResponseDto> {
+  public regenerateApiKey(id: string): CancelablePromise<WorkspaceResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects/{id}/regenerate-key",
+      url: "/workspaces/{id}/regenerate-key",
       path: {
         id: id,
       },

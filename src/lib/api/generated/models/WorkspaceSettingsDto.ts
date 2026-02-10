@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ProjectSettingsDto = {
+export type WorkspaceSettingsDto = {
   /**
    * AI 모델
    */

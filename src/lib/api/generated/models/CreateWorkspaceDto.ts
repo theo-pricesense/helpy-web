@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type CreateProjectDto = {
+export type CreateWorkspaceDto = {
   /**
    * 조직 ID
    */
   organizationId: string;
   /**
-   * 프로젝트 이름
+   * 워크스페이스 이름
    */
   name: string;
 };

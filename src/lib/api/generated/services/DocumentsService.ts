@@ -14,20 +14,20 @@ export class DocumentsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 텍스트 문서 생성
-   * @param projectId
+   * @param workspaceId
    * @param requestBody
    * @returns DocumentResponseDto
    * @throws ApiError
    */
   public documentsControllerCreateTextDocument(
-    projectId: string,
+    workspaceId: string,
     requestBody: CreateTextDocumentDto,
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects/{projectId}/documents/text",
+      url: "/projects/{workspaceId}/documents/text",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -35,20 +35,20 @@ export class DocumentsService {
   }
   /**
    * URL 문서 생성 (웹페이지 크롤링)
-   * @param projectId
+   * @param workspaceId
    * @param requestBody
    * @returns DocumentResponseDto
    * @throws ApiError
    */
   public documentsControllerCreateUrlDocument(
-    projectId: string,
+    workspaceId: string,
     requestBody: CreateUrlDocumentDto,
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects/{projectId}/documents/url",
+      url: "/projects/{workspaceId}/documents/url",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -56,41 +56,41 @@ export class DocumentsService {
   }
   /**
    * 파일 문서 업로드
-   * @param projectId
+   * @param workspaceId
    * @returns DocumentResponseDto
    * @throws ApiError
    */
   public documentsControllerCreateFileDocument(
-    projectId: string,
+    workspaceId: string,
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects/{projectId}/documents/file",
+      url: "/projects/{workspaceId}/documents/file",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
     });
   }
   /**
-   * 프로젝트 문서 목록 조회
-   * @param projectId
+   * 워크스페이스 문서 목록 조회
+   * @param workspaceId
    * @returns DocumentResponseDto
    * @throws ApiError
    */
   public documentsControllerGetDocuments(
-    projectId: string,
+    workspaceId: string,
   ): CancelablePromise<Array<DocumentResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{projectId}/documents",
+      url: "/projects/{workspaceId}/documents",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
     });
   }
   /**
    * 문서 검색 (시맨틱 검색)
-   * @param projectId
+   * @param workspaceId
    * @param query 검색 쿼리
    * @param limit 결과 개수 제한
    * @param threshold 유사도 임계값
@@ -98,16 +98,16 @@ export class DocumentsService {
    * @throws ApiError
    */
   public documentsControllerSearchDocuments(
-    projectId: string,
+    workspaceId: string,
     query: string,
     limit: number = 5,
     threshold: number = 0.7,
   ): CancelablePromise<Array<ChunkSearchResultDto>> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{projectId}/documents/search",
+      url: "/projects/{workspaceId}/documents/search",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
       query: {
         query: query,
@@ -127,7 +127,7 @@ export class DocumentsService {
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{projectId}/documents/{id}",
+      url: "/projects/{workspaceId}/documents/{id}",
       path: {
         id: id,
       },
@@ -146,7 +146,7 @@ export class DocumentsService {
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
-      url: "/projects/{projectId}/documents/{id}",
+      url: "/projects/{workspaceId}/documents/{id}",
       path: {
         id: id,
       },
@@ -165,7 +165,7 @@ export class DocumentsService {
   ): CancelablePromise<void> {
     return this.httpRequest.request({
       method: "DELETE",
-      url: "/projects/{projectId}/documents/{id}",
+      url: "/projects/{workspaceId}/documents/{id}",
       path: {
         id: id,
       },
@@ -182,7 +182,7 @@ export class DocumentsService {
   ): CancelablePromise<DocumentResponseDto> {
     return this.httpRequest.request({
       method: "POST",
-      url: "/projects/{projectId}/documents/{id}/process",
+      url: "/projects/{workspaceId}/documents/{id}/process",
       path: {
         id: id,
       },

@@ -3,11 +3,8 @@
 import {
   BarChart3,
   Bot,
-  Building2,
-  Check,
   ChevronDown,
   ChevronRight,
-  ChevronsUpDown,
   FileText,
   FolderKanban,
   LogOut,
@@ -25,7 +22,6 @@ import { HelpyLogo } from "@/components/helpy-logo";
 import { NotificationCenter } from "@/components/notification-center";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -41,16 +37,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { organizationsApi, projectsApi } from "@/lib/api";
-import type { Organization, Project } from "@/lib/types";
+import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
-const projectSubNav = [
+const workspaceSubNav = [
   { label: "Conversations", segment: "conversations", icon: MessageSquare },
   { label: "Documents", segment: "documents", icon: FileText },
   { label: "AI Settings", segment: "ai", icon: Bot },
   { label: "Widget", segment: "widget", icon: Puzzle },
   { label: "Analytics", segment: "analytics", icon: BarChart3 },
+  { label: "Settings", segment: "", icon: Settings },
 ];
 
 export function DashboardSidebar() {
@@ -58,10 +55,10 @@ export function DashboardSidebar() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
 
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
-  const [currentOrg, setCurrentOrg] = useState<Organization | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [workspaces, setWorkspaces] = useState<Project[]>([]);
+  const [expandedWorkspace, setExpandedWorkspace] = useState<string | null>(
+    null,
+  );
 
   const initials = user?.name
     ? user.name
@@ -72,59 +69,34 @@ export function DashboardSidebar() {
         .slice(0, 2)
     : "U";
 
-  const loadOrgs = useCallback(async () => {
+  const loadWorkspaces = useCallback(async () => {
     try {
-      const data = await organizationsApi.getMyOrganizations();
-      setOrganizations(data);
-      if (data.length > 0 && !currentOrg) {
-        setCurrentOrg(data[0]);
+      const orgs = await organizationsApi.getMyOrganizations();
+      if (orgs.length > 0) {
+        const data = await projectsApi.getProjects(orgs[0].id);
+        setWorkspaces(data);
       }
     } catch {
-      const demo: Organization[] = [
+      setWorkspaces([
         {
-          id: "org-1",
-          name: "Acme Corp",
-          createdAt: "2025-01-15T00:00:00Z",
-          memberCount: 12,
-        },
-        {
-          id: "org-2",
-          name: "Startup Inc",
-          createdAt: "2025-06-01T00:00:00Z",
-          memberCount: 4,
-        },
-      ];
-      setOrganizations(demo);
-      if (!currentOrg) setCurrentOrg(demo[0]);
-    }
-  }, [currentOrg]);
-
-  const loadProjects = useCallback(async () => {
-    if (!currentOrg) return;
-    try {
-      const data = await projectsApi.getProjects(currentOrg.id);
-      setProjects(data);
-    } catch {
-      setProjects([
-        {
-          id: "proj-1",
-          organizationId: currentOrg.id,
+          id: "ws-1",
+          organizationId: "org-1",
           name: "Customer Portal",
           apiKey: "hpy_live_xxx",
           status: "active",
           createdAt: "2025-03-10T00:00:00Z",
         },
         {
-          id: "proj-2",
-          organizationId: currentOrg.id,
+          id: "ws-2",
+          organizationId: "org-1",
           name: "Internal Helpdesk",
           apiKey: "hpy_live_yyy",
           status: "active",
           createdAt: "2025-05-22T00:00:00Z",
         },
         {
-          id: "proj-3",
-          organizationId: currentOrg.id,
+          id: "ws-3",
+          organizationId: "org-1",
           name: "Legacy Support",
           apiKey: "hpy_live_zzz",
           status: "inactive",
@@ -132,98 +104,22 @@ export function DashboardSidebar() {
         },
       ]);
     }
-  }, [currentOrg]);
+  }, []);
 
   useEffect(() => {
-    loadOrgs();
-  }, [loadOrgs]);
-  useEffect(() => {
-    loadProjects();
-  }, [loadProjects]);
+    loadWorkspaces();
+  }, [loadWorkspaces]);
 
-  // Auto-expand project based on URL
   useEffect(() => {
-    const match = pathname.match(/\/projects\/([^/]+)/);
-    if (match) setExpandedProject(match[1]);
+    const match = pathname.match(/\/workspaces\/([^/]+)/);
+    if (match) setExpandedWorkspace(match[1]);
   }, [pathname]);
-
-  const switchOrg = (org: Organization) => {
-    setCurrentOrg(org);
-    setProjects([]);
-    setExpandedProject(null);
-  };
-
-  const orgInitials = currentOrg?.name
-    ? currentOrg.name
-        .split(" ")
-        .map((w) => w[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : "?";
 
   return (
     <aside className="hidden md:flex md:w-64 flex-col border-r border-sidebar-border bg-sidebar h-dvh sticky top-0">
       {/* Logo */}
-      <div className="px-4 pt-4 pb-2">
+      <div className="px-4 pt-4 pb-3">
         <HelpyLogo size="sm" textClassName="text-sidebar-foreground" />
-      </div>
-
-      {/* Organization Switcher */}
-      <div className="px-3 py-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-2 py-2 hover:bg-sidebar-accent transition-colors outline-none">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary text-xs font-bold">
-              {orgInitials}
-            </div>
-            <div className="flex-1 text-left min-w-0">
-              <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                {currentOrg?.name || "Select Organization"}
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                {currentOrg?.memberCount ?? 0} members
-              </p>
-            </div>
-            <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-[232px]">
-            {organizations.map((org) => (
-              <DropdownMenuItem
-                key={org.id}
-                onClick={() => switchOrg(org)}
-                className="flex items-center gap-3"
-              >
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary text-xs font-bold">
-                  {org.name
-                    .split(" ")
-                    .map((w) => w[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 2)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{org.name}</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {org.memberCount ?? 0} members
-                  </p>
-                </div>
-                {currentOrg?.id === org.id && (
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                )}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                href="/organizations"
-                className="flex items-center gap-2 text-muted-foreground"
-              >
-                <Building2 className="h-4 w-4" />
-                Manage organizations
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       <Separator className="bg-sidebar-border mx-3" />
@@ -248,37 +144,32 @@ export function DashboardSidebar() {
             </kbd>
           </button>
 
-          {/* Projects */}
+          {/* Workspaces */}
           <div className="pt-3">
             <div className="flex items-center justify-between px-2 pb-2">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                Projects
+                Workspaces
               </p>
-              <Link
-                href={
-                  currentOrg
-                    ? `/organizations/${currentOrg.id}/projects`
-                    : "/organizations"
-                }
+              <button
+                type="button"
+                onClick={() => router.push("/onboarding")}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <Plus className="h-3.5 w-3.5" />
-              </Link>
+              </button>
             </div>
 
             <div className="space-y-0.5">
-              {projects.map((project) => {
-                const isExpanded = expandedProject === project.id;
-                const isProjectActive = pathname.startsWith(
-                  `/projects/${project.id}`,
-                );
+              {workspaces.map((ws) => {
+                const isExpanded = expandedWorkspace === ws.id;
+                const isWsActive = pathname.startsWith(`/workspaces/${ws.id}`);
 
                 return (
                   <Collapsible
-                    key={project.id}
+                    key={ws.id}
                     open={isExpanded}
                     onOpenChange={() =>
-                      setExpandedProject(isExpanded ? null : project.id)
+                      setExpandedWorkspace(isExpanded ? null : ws.id)
                     }
                   >
                     <CollapsibleTrigger className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent group">
@@ -291,22 +182,20 @@ export function DashboardSidebar() {
                       <FolderKanban
                         className={cn(
                           "h-4 w-4 shrink-0",
-                          isProjectActive
-                            ? "text-primary"
-                            : "text-muted-foreground",
+                          isWsActive ? "text-primary" : "text-muted-foreground",
                         )}
                       />
                       <span
                         className={cn(
                           "truncate flex-1 text-left",
-                          isProjectActive
+                          isWsActive
                             ? "text-sidebar-foreground font-medium"
                             : "text-sidebar-foreground/80",
                         )}
                       >
-                        {project.name}
+                        {ws.name}
                       </span>
-                      {project.status === "inactive" && (
+                      {ws.status === "inactive" && (
                         <Badge
                           variant="secondary"
                           className="h-4 px-1 text-[9px]"
@@ -318,13 +207,18 @@ export function DashboardSidebar() {
 
                     <CollapsibleContent>
                       <div className="ml-5 border-l border-sidebar-border pl-2 py-0.5 space-y-0.5">
-                        {projectSubNav.map((sub) => {
-                          const href = `/projects/${project.id}/${sub.segment}`;
-                          const isActive = pathname === href;
+                        {workspaceSubNav.map((sub) => {
+                          const href = sub.segment
+                            ? `/workspaces/${ws.id}/${sub.segment}`
+                            : `/workspaces/${ws.id}`;
+                          const isActive = sub.segment
+                            ? pathname === href ||
+                              pathname.startsWith(href + "/")
+                            : pathname === href;
                           const SubIcon = sub.icon;
                           return (
                             <Link
-                              key={sub.segment}
+                              key={sub.segment || "settings"}
                               href={href}
                               className={cn(
                                 "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors",
@@ -338,27 +232,15 @@ export function DashboardSidebar() {
                             </Link>
                           );
                         })}
-                        <Link
-                          href={`/projects/${project.id}`}
-                          className={cn(
-                            "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors",
-                            pathname === `/projects/${project.id}`
-                              ? "bg-sidebar-accent text-primary font-medium"
-                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                          )}
-                        >
-                          <Settings className="h-3.5 w-3.5" />
-                          Settings
-                        </Link>
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
                 );
               })}
 
-              {projects.length === 0 && (
+              {workspaces.length === 0 && (
                 <p className="px-2 py-3 text-xs text-muted-foreground text-center">
-                  No projects yet
+                  No workspaces yet
                 </p>
               )}
             </div>
@@ -412,14 +294,6 @@ export function DashboardSidebar() {
                   Profile
                 </Link>
               </DropdownMenuItem>
-              {currentOrg && (
-                <DropdownMenuItem asChild>
-                  <Link href={`/settings/organization/${currentOrg.id}`}>
-                    <Building2 className="mr-2 h-4 w-4" />
-                    Organization Settings
-                  </Link>
-                </DropdownMenuItem>
-              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {

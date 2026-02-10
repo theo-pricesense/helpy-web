@@ -11,9 +11,9 @@ import { ConversationsService } from "./services/ConversationsService";
 import { DocumentsService } from "./services/DocumentsService";
 import { HealthService } from "./services/HealthService";
 import { OrganizationsService } from "./services/OrganizationsService";
-import { ProjectsService } from "./services/ProjectsService";
 import { UsersService } from "./services/UsersService";
 import { WidgetService } from "./services/WidgetService";
+import { WorkspacesService } from "./services/WorkspacesService";
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class ApiClient {
@@ -23,9 +23,9 @@ export class ApiClient {
   public readonly documents: DocumentsService;
   public readonly health: HealthService;
   public readonly organizations: OrganizationsService;
-  public readonly projects: ProjectsService;
   public readonly users: UsersService;
   public readonly widget: WidgetService;
+  public readonly workspaces: WorkspacesService;
   public readonly request: BaseHttpRequest;
   constructor(
     config?: Partial<OpenAPIConfig>,
@@ -48,8 +48,8 @@ export class ApiClient {
     this.documents = new DocumentsService(this.request);
     this.health = new HealthService(this.request);
     this.organizations = new OrganizationsService(this.request);
-    this.projects = new ProjectsService(this.request);
     this.users = new UsersService(this.request);
     this.widget = new WidgetService(this.request);
+    this.workspaces = new WorkspacesService(this.request);
   }
 }

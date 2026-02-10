@@ -2,23 +2,23 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UpdateProjectDto = {
+export type UpdateWorkspaceDto = {
   /**
-   * 프로젝트 이름
+   * 워크스페이스 이름
    */
   name?: string;
   /**
-   * 프로젝트 상태
+   * 워크스페이스 상태
    */
-  status?: UpdateProjectDto.status;
+  status?: UpdateWorkspaceDto.status;
   /**
-   * 프로젝트 설정
+   * 워크스페이스 설정
    */
   settings?: Record<string, any>;
 };
-export namespace UpdateProjectDto {
+export namespace UpdateWorkspaceDto {
   /**
-   * 프로젝트 상태
+   * 워크스페이스 상태
    */
   export enum status {
     ACTIVE = "ACTIVE",

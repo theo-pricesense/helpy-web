@@ -15,7 +15,7 @@ export class WidgetService {
   /**
    * 대화 시작
    * @param requestBody
-   * @param xApiKey Project API Key
+   * @param xApiKey Workspace API Key
    * @returns StartConversationResponseDto
    * @throws ApiError
    */
@@ -37,7 +37,7 @@ export class WidgetService {
    * 메시지 전송 (AI 응답 스트리밍)
    * @param conversationId
    * @param requestBody
-   * @param xApiKey Project API Key
+   * @param xApiKey Workspace API Key
    * @returns any
    * @throws ApiError
    */
@@ -62,7 +62,7 @@ export class WidgetService {
   /**
    * 메시지 히스토리 조회
    * @param conversationId
-   * @param xApiKey Project API Key
+   * @param xApiKey Workspace API Key
    * @returns WidgetMessageResponseDto
    * @throws ApiError
    */
@@ -84,7 +84,7 @@ export class WidgetService {
   /**
    * 대화 상세 조회
    * @param conversationId
-   * @param xApiKey Project API Key
+   * @param xApiKey Workspace API Key
    * @returns WidgetConversationResponseDto
    * @throws ApiError
    */

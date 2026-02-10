@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ProjectSettingsDto } from "./ProjectSettingsDto";
-export type ProjectResponseDto = {
+import type { WorkspaceSettingsDto } from "./WorkspaceSettingsDto";
+export type WorkspaceResponseDto = {
   /**
-   * 프로젝트 ID
+   * 워크스페이스 ID
    */
   id: string;
   /**
@@ -13,21 +13,21 @@ export type ProjectResponseDto = {
    */
   organizationId: string;
   /**
-   * 프로젝트 이름
+   * 워크스페이스 이름
    */
   name: string;
   /**
-   * 프로젝트 상태
+   * 워크스페이스 상태
    */
-  status: ProjectResponseDto.status;
+  status: WorkspaceResponseDto.status;
   /**
    * API 키
    */
   apiKey: string;
   /**
-   * 프로젝트 설정
+   * 워크스페이스 설정
    */
-  settings: ProjectSettingsDto;
+  settings: WorkspaceSettingsDto;
   /**
    * 생성일
    */
@@ -37,9 +37,9 @@ export type ProjectResponseDto = {
    */
   updatedAt: string;
 };
-export namespace ProjectResponseDto {
+export namespace WorkspaceResponseDto {
   /**
-   * 프로젝트 상태
+   * 워크스페이스 상태
    */
   export enum status {
     ACTIVE = "ACTIVE",

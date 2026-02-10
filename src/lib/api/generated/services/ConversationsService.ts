@@ -12,59 +12,59 @@ export class ConversationsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 대화 목록 조회
-   * @param projectId
+   * @param workspaceId
    * @returns ConversationResponseDto
    * @throws ApiError
    */
   public getConversations(
-    projectId: string,
+    workspaceId: string,
   ): CancelablePromise<Array<ConversationResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{projectId}/conversations",
+      url: "/projects/{workspaceId}/conversations",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
       },
     });
   }
   /**
    * 대화 상세 조회 (메시지 포함)
-   * @param projectId
+   * @param workspaceId
    * @param conversationId
    * @returns ConversationDetailResponseDto
    * @throws ApiError
    */
   public getConversation(
-    projectId: string,
+    workspaceId: string,
     conversationId: string,
   ): CancelablePromise<ConversationDetailResponseDto> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/projects/{projectId}/conversations/{conversationId}",
+      url: "/projects/{workspaceId}/conversations/{conversationId}",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
         conversationId: conversationId,
       },
     });
   }
   /**
    * 대화 상태 변경
-   * @param projectId
+   * @param workspaceId
    * @param conversationId
    * @param requestBody
    * @returns ConversationResponseDto
    * @throws ApiError
    */
   public updateConversation(
-    projectId: string,
+    workspaceId: string,
     conversationId: string,
     requestBody: UpdateConversationDto,
   ): CancelablePromise<ConversationResponseDto> {
     return this.httpRequest.request({
       method: "PATCH",
-      url: "/projects/{projectId}/conversations/{conversationId}",
+      url: "/projects/{workspaceId}/conversations/{conversationId}",
       path: {
-        projectId: projectId,
+        workspaceId: workspaceId,
         conversationId: conversationId,
       },
       body: requestBody,
