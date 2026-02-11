@@ -47,7 +47,7 @@ const workspaceSubNav = [
   { label: "AI Settings", segment: "ai", icon: Bot },
   { label: "Widget", segment: "widget", icon: Puzzle },
   { label: "Analytics", segment: "analytics", icon: BarChart3 },
-  { label: "Settings", segment: "", icon: Settings },
+  { label: "Settings", segment: "settings", icon: Settings },
 ];
 
 export function DashboardSidebar() {
