@@ -2,6 +2,7 @@
 
 import { Loader2, MessageSquare, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,31 +24,8 @@ import {
 } from "@/components/ui/table";
 import { useConversations } from "@/hooks/use-conversations";
 
-const statusConfig: Record<string, { label: string; className: string }> = {
-  ACTIVE: {
-    label: "Active",
-    className:
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-  },
-  WAITING: {
-    label: "Waiting",
-    className:
-      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-  },
-  CLOSED: { label: "Closed", className: "bg-muted text-muted-foreground" },
-};
-
-function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
 export default function ConversationsPage() {
+  const t = useTranslations();
   const params = useParams();
   const router = useRouter();
   const workspaceId = params.workspaceId as string;
@@ -56,6 +34,33 @@ export default function ConversationsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const { data: conversations = [], isLoading } = useConversations(workspaceId);
+
+  const statusConfig: Record<string, { label: string; className: string }> = {
+    ACTIVE: {
+      label: t("status.active"),
+      className:
+        "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    },
+    WAITING: {
+      label: t("status.waiting"),
+      className:
+        "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    },
+    CLOSED: {
+      label: t("status.closed"),
+      className: "bg-muted text-muted-foreground",
+    },
+  };
+
+  const timeAgo = (dateStr: string): string => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return t("time.minutesAgo", { minutes: mins });
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return t("time.hoursAgo", { hours });
+    const days = Math.floor(hours / 24);
+    return t("time.daysAgo", { days });
+  };
 
   const filtered = conversations.filter((conv) => {
     if (statusFilter !== "all" && conv.status !== statusFilter) return false;
@@ -68,10 +73,10 @@ export default function ConversationsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Conversations
+          {t("conversations.title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          View and manage customer conversations.
+          {t("conversations.description")}
         </p>
       </div>
 
@@ -82,7 +87,7 @@ export default function ConversationsPage() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search conversations..."
+            placeholder={t("conversations.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -91,10 +96,10 @@ export default function ConversationsPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="ACTIVE">Active</SelectItem>
-            <SelectItem value="WAITING">Waiting</SelectItem>
-            <SelectItem value="CLOSED">Closed</SelectItem>
+            <SelectItem value="all">{t("common.all")}</SelectItem>
+            <SelectItem value="ACTIVE">{t("status.active")}</SelectItem>
+            <SelectItem value="WAITING">{t("status.waiting")}</SelectItem>
+            <SelectItem value="CLOSED">{t("status.closed")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -110,19 +115,21 @@ export default function ConversationsPage() {
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <MessageSquare className="h-8 w-8 text-muted-foreground/50 mb-2" />
               <p className="text-sm text-muted-foreground">
-                No conversations found.
+                {t("conversations.empty")}
               </p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Customer</TableHead>
-                  <TableHead className="text-center">Messages</TableHead>
-                  <TableHead>Channel</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t("conversations.customer")}</TableHead>
+                  <TableHead className="text-center">
+                    {t("conversations.messages")}
+                  </TableHead>
+                  <TableHead>{t("conversations.channel")}</TableHead>
+                  <TableHead>{t("conversations.status")}</TableHead>
                   <TableHead className="hidden sm:table-cell">
-                    Started
+                    {t("conversations.started")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -175,7 +182,7 @@ export default function ConversationsPage() {
       {/* Total count */}
       {filtered.length > 0 && (
         <p className="text-sm text-muted-foreground">
-          {filtered.length} conversation{filtered.length !== 1 ? "s" : ""}
+          {t("conversations.count", { count: filtered.length })}
         </p>
       )}
     </div>

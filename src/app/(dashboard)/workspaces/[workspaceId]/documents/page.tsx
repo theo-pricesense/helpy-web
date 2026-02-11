@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -65,54 +66,6 @@ import {
 } from "@/hooks/use-documents";
 import { DocumentResponseDto } from "@/lib/api/generated";
 
-const urlSchema = z.object({
-  title: z.string().min(1, "제목을 입력해주세요"),
-  url: z.string().url("유효한 URL을 입력해주세요"),
-});
-
-const textSchema = z.object({
-  title: z.string().min(1, "제목을 입력해주세요"),
-  content: z.string().min(1, "내용을 입력해주세요"),
-});
-
-type UrlForm = z.infer<typeof urlSchema>;
-type TextForm = z.infer<typeof textSchema>;
-
-const statusConfig: Record<
-  DocumentResponseDto.status,
-  { label: string; icon: typeof Clock; className: string }
-> = {
-  [DocumentResponseDto.status.PENDING]: {
-    label: "Pending",
-    icon: Clock,
-    className: "text-muted-foreground border-muted bg-muted/50",
-  },
-  [DocumentResponseDto.status.PROCESSING]: {
-    label: "Processing",
-    icon: Clock,
-    className: "text-amber-500 border-amber-500/20 bg-amber-500/10",
-  },
-  [DocumentResponseDto.status.COMPLETED]: {
-    label: "Completed",
-    icon: CheckCircle2,
-    className: "text-emerald-500 border-emerald-500/20 bg-emerald-500/10",
-  },
-  [DocumentResponseDto.status.FAILED]: {
-    label: "Failed",
-    icon: AlertCircle,
-    className: "text-destructive border-destructive/20 bg-destructive/10",
-  },
-};
-
-const typeConfig: Record<
-  DocumentResponseDto.type,
-  { label: string; icon: typeof FileText }
-> = {
-  [DocumentResponseDto.type.TEXT]: { label: "Text", icon: FileText },
-  [DocumentResponseDto.type.URL]: { label: "URL", icon: Globe },
-  [DocumentResponseDto.type.FILE]: { label: "File", icon: FileText },
-};
-
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -120,6 +73,7 @@ function formatFileSize(bytes: number): string {
 }
 
 export default function DocumentsPage() {
+  const t = useTranslations();
   const params = useParams();
   const workspaceId = params.workspaceId as string;
 
@@ -131,6 +85,54 @@ export default function DocumentsPage() {
   const createTextMutation = useCreateTextDocument(workspaceId);
   const deleteMutation = useDeleteDocument(workspaceId);
   const processMutation = useProcessDocument(workspaceId);
+
+  const urlSchema = z.object({
+    title: z.string().min(1, t("documents.titleRequired")),
+    url: z.string().url(t("documents.urlInvalid")),
+  });
+
+  const textSchema = z.object({
+    title: z.string().min(1, t("documents.titleRequired")),
+    content: z.string().min(1, t("documents.contentRequired")),
+  });
+
+  type UrlForm = z.infer<typeof urlSchema>;
+  type TextForm = z.infer<typeof textSchema>;
+
+  const statusConfig: Record<
+    DocumentResponseDto.status,
+    { label: string; icon: typeof Clock; className: string }
+  > = {
+    [DocumentResponseDto.status.PENDING]: {
+      label: t("status.pending"),
+      icon: Clock,
+      className: "text-muted-foreground border-muted bg-muted/50",
+    },
+    [DocumentResponseDto.status.PROCESSING]: {
+      label: t("status.processing"),
+      icon: Clock,
+      className: "text-amber-500 border-amber-500/20 bg-amber-500/10",
+    },
+    [DocumentResponseDto.status.COMPLETED]: {
+      label: t("status.completed"),
+      icon: CheckCircle2,
+      className: "text-emerald-500 border-emerald-500/20 bg-emerald-500/10",
+    },
+    [DocumentResponseDto.status.FAILED]: {
+      label: t("status.failed"),
+      icon: AlertCircle,
+      className: "text-destructive border-destructive/20 bg-destructive/10",
+    },
+  };
+
+  const typeConfig: Record<
+    DocumentResponseDto.type,
+    { label: string; icon: typeof FileText }
+  > = {
+    [DocumentResponseDto.type.TEXT]: { label: "Text", icon: FileText },
+    [DocumentResponseDto.type.URL]: { label: "URL", icon: Globe },
+    [DocumentResponseDto.type.FILE]: { label: "File", icon: FileText },
+  };
 
   const urlForm = useForm<UrlForm>({
     resolver: zodResolver(urlSchema),
@@ -145,12 +147,12 @@ export default function DocumentsPage() {
   const handleCreateUrl = (data: UrlForm) => {
     createUrlMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("URL 문서가 생성되었습니다. 크롤링을 시작합니다.");
+        toast.success(t("documents.toast.urlCreated"));
         setUrlDialogOpen(false);
         urlForm.reset();
       },
       onError: () => {
-        toast.error("URL 문서 생성에 실패했습니다.");
+        toast.error(t("documents.toast.urlFailed"));
       },
     });
   };
@@ -158,12 +160,12 @@ export default function DocumentsPage() {
   const handleCreateText = (data: TextForm) => {
     createTextMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("텍스트 문서가 생성되었습니다.");
+        toast.success(t("documents.toast.textCreated"));
         setTextDialogOpen(false);
         textForm.reset();
       },
       onError: () => {
-        toast.error("텍스트 문서 생성에 실패했습니다.");
+        toast.error(t("documents.toast.textFailed"));
       },
     });
   };
@@ -171,10 +173,10 @@ export default function DocumentsPage() {
   const handleDelete = (docId: string) => {
     deleteMutation.mutate(docId, {
       onSuccess: () => {
-        toast.success("문서가 삭제되었습니다.");
+        toast.success(t("documents.toast.deleted"));
       },
       onError: () => {
-        toast.error("문서 삭제에 실패했습니다.");
+        toast.error(t("documents.toast.deleteFailed"));
       },
     });
   };
@@ -182,10 +184,10 @@ export default function DocumentsPage() {
   const handleProcess = (docId: string) => {
     processMutation.mutate(docId, {
       onSuccess: () => {
-        toast.success("문서 처리가 시작되었습니다.");
+        toast.success(t("documents.toast.processStarted"));
       },
       onError: () => {
-        toast.error("문서 처리에 실패했습니다.");
+        toast.error(t("documents.toast.processFailed"));
       },
     });
   };
@@ -203,10 +205,10 @@ export default function DocumentsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Documents
+            {t("documents.title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage the AI knowledge base. Add text or crawl web pages.
+            {t("documents.description")}
           </p>
         </div>
         <div className="flex gap-2">
@@ -215,23 +217,25 @@ export default function DocumentsPage() {
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
                 <FileText className="h-4 w-4" />
-                Add Text
+                {t("documents.addText")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <form onSubmit={textForm.handleSubmit(handleCreateText)}>
                 <DialogHeader>
-                  <DialogTitle>Add Text Document</DialogTitle>
+                  <DialogTitle>{t("documents.addTextTitle")}</DialogTitle>
                   <DialogDescription>
-                    Create a text document for the knowledge base.
+                    {t("documents.addTextDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="text-title">Title</Label>
+                    <Label htmlFor="text-title">
+                      {t("documents.docTitle")}
+                    </Label>
                     <Input
                       id="text-title"
-                      placeholder="FAQ"
+                      placeholder={t("documents.titlePlaceholder")}
                       {...textForm.register("title")}
                     />
                     {textForm.formState.errors.title && (
@@ -241,10 +245,12 @@ export default function DocumentsPage() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="text-content">Content</Label>
+                    <Label htmlFor="text-content">
+                      {t("documents.content")}
+                    </Label>
                     <Textarea
                       id="text-content"
-                      placeholder="Enter document content..."
+                      placeholder={t("documents.contentPlaceholder")}
                       rows={8}
                       {...textForm.register("content")}
                     />
@@ -261,13 +267,13 @@ export default function DocumentsPage() {
                     variant="outline"
                     onClick={() => setTextDialogOpen(false)}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                   <Button type="submit" disabled={createTextMutation.isPending}>
                     {createTextMutation.isPending && (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     )}
-                    Create
+                    {t("common.create")}
                   </Button>
                 </DialogFooter>
               </form>
@@ -279,20 +285,20 @@ export default function DocumentsPage() {
             <DialogTrigger asChild>
               <Button size="sm">
                 <Globe className="h-4 w-4" />
-                Add URL
+                {t("documents.addUrl")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <form onSubmit={urlForm.handleSubmit(handleCreateUrl)}>
                 <DialogHeader>
-                  <DialogTitle>Add URL Document</DialogTitle>
+                  <DialogTitle>{t("documents.addUrlTitle")}</DialogTitle>
                   <DialogDescription>
-                    Crawl a web page and add it to the knowledge base.
+                    {t("documents.addUrlDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="url-title">Title</Label>
+                    <Label htmlFor="url-title">{t("documents.docTitle")}</Label>
                     <Input
                       id="url-title"
                       placeholder="Help Center"
@@ -305,10 +311,10 @@ export default function DocumentsPage() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="url-url">URL</Label>
+                    <Label htmlFor="url-url">{t("documents.url")}</Label>
                     <Input
                       id="url-url"
-                      placeholder="https://docs.example.com/guide"
+                      placeholder={t("documents.urlPlaceholder")}
                       {...urlForm.register("url")}
                     />
                     {urlForm.formState.errors.url && (
@@ -324,13 +330,13 @@ export default function DocumentsPage() {
                     variant="outline"
                     onClick={() => setUrlDialogOpen(false)}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                   <Button type="submit" disabled={createUrlMutation.isPending}>
                     {createUrlMutation.isPending && (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     )}
-                    Crawl
+                    {t("documents.crawl")}
                   </Button>
                 </DialogFooter>
               </form>
@@ -343,13 +349,13 @@ export default function DocumentsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            Documents
+            {t("documents.allDocuments")}
             <Badge variant="secondary" className="ml-2">
               {documents.length}
             </Badge>
           </CardTitle>
           <CardDescription>
-            All documents in the knowledge base.
+            {t("documents.allDocumentsDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -357,19 +363,21 @@ export default function DocumentsPage() {
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <FileText className="h-8 w-8 text-muted-foreground/50 mb-2" />
               <p className="text-sm text-muted-foreground">
-                No documents yet. Add text or crawl a URL to get started.
+                {t("documents.empty")}
               </p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Document</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead className="hidden sm:table-cell">Chunks</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t("documents.document")}</TableHead>
+                  <TableHead>{t("documents.type")}</TableHead>
+                  <TableHead className="hidden sm:table-cell">
+                    {t("documents.chunks")}
+                  </TableHead>
+                  <TableHead>{t("conversations.status")}</TableHead>
                   <TableHead className="hidden md:table-cell">
-                    Created
+                    {t("common.created")}
                   </TableHead>
                   <TableHead className="w-20" />
                 </TableRow>
@@ -421,7 +429,7 @@ export default function DocumentsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
-                        {new Date(doc.createdAt).toLocaleDateString("ko-KR")}
+                        {new Date(doc.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
@@ -451,20 +459,23 @@ export default function DocumentsPage() {
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>
-                                  Delete Document?
+                                  {t("documents.deleteTitle")}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This will remove &quot;{doc.title}&quot; from
-                                  the knowledge base.
+                                  {t("documents.deleteDescription", {
+                                    title: doc.title,
+                                  })}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel>
+                                  {t("common.cancel")}
+                                </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDelete(doc.id)}
                                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
-                                  Delete
+                                  {t("common.delete")}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>

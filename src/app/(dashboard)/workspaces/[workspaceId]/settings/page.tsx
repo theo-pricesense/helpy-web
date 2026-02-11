@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,13 +47,8 @@ import {
 } from "@/hooks/use-workspaces";
 import { WorkspaceResponseDto } from "@/lib/api/generated";
 
-const updateWorkspaceSchema = z.object({
-  name: z.string().min(1, "Workspace name is required"),
-});
-
-type UpdateWorkspaceForm = z.infer<typeof updateWorkspaceSchema>;
-
 export default function WorkspaceSettingsPage() {
+  const t = useTranslations();
   const params = useParams();
   const router = useRouter();
   const workspaceId = params.workspaceId as string;
@@ -63,6 +59,12 @@ export default function WorkspaceSettingsPage() {
   const updateMutation = useUpdateWorkspace();
   const deleteMutation = useDeleteWorkspace();
   const regenerateMutation = useRegenerateApiKey();
+
+  const updateWorkspaceSchema = z.object({
+    name: z.string().min(1, t("workspaces.nameRequired")),
+  });
+
+  type UpdateWorkspaceForm = z.infer<typeof updateWorkspaceSchema>;
 
   const {
     register,
@@ -85,13 +87,13 @@ export default function WorkspaceSettingsPage() {
       {
         onSuccess: (updated) => {
           reset({ name: updated.name });
-          toast.success("Workspace updated");
+          toast.success(t("workspaceSettings.toast.updated"));
         },
         onError: (error) => {
           toast.error(
             error instanceof Error
               ? error.message
-              : "Failed to update workspace",
+              : t("workspaceSettings.toast.updateFailed"),
           );
         },
       },
@@ -101,13 +103,13 @@ export default function WorkspaceSettingsPage() {
   const handleRegenerateKey = () => {
     regenerateMutation.mutate(workspaceId, {
       onSuccess: () => {
-        toast.success("API key regenerated");
+        toast.success(t("workspaceSettings.toast.keyRegenerated"));
       },
       onError: (error) => {
         toast.error(
           error instanceof Error
             ? error.message
-            : "Failed to regenerate API key",
+            : t("workspaceSettings.toast.keyRegenerateFailed"),
         );
       },
     });
@@ -116,12 +118,14 @@ export default function WorkspaceSettingsPage() {
   const handleDelete = () => {
     deleteMutation.mutate(workspaceId, {
       onSuccess: () => {
-        toast.success("Workspace deleted");
+        toast.success(t("workspaceSettings.toast.deleted"));
         router.push("/workspaces");
       },
       onError: (error) => {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete workspace",
+          error instanceof Error
+            ? error.message
+            : t("workspaceSettings.toast.deleteFailed"),
         );
       },
     });
@@ -132,8 +136,14 @@ export default function WorkspaceSettingsPage() {
       navigator.clipboard.writeText(workspace.apiKey);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      toast.success("API key copied to clipboard");
+      toast.success(t("workspaceSettings.toast.keyCopied"));
     }
+  };
+
+  const getStatusLabel = (status: WorkspaceResponseDto.status) => {
+    return status === WorkspaceResponseDto.status.ACTIVE
+      ? t("status.active")
+      : t("status.inactive");
   };
 
   if (isLoading) {
@@ -170,11 +180,11 @@ export default function WorkspaceSettingsPage() {
                 {workspace.status === WorkspaceResponseDto.status.ACTIVE && (
                   <Zap className="h-3 w-3 mr-1" />
                 )}
-                {workspace.status}
+                {getStatusLabel(workspace.status)}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                Created{" "}
-                {new Date(workspace.createdAt).toLocaleDateString("ko-KR")}
+                {t("common.created")}{" "}
+                {new Date(workspace.createdAt).toLocaleDateString()}
               </span>
             </div>
           </div>
@@ -186,10 +196,10 @@ export default function WorkspaceSettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Key className="h-4 w-4 text-primary" />
-            API Key
+            {t("workspaceSettings.apiKey")}
           </CardTitle>
           <CardDescription>
-            Use this key to authenticate requests from your widget.
+            {t("workspaceSettings.apiKeyDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -201,7 +211,7 @@ export default function WorkspaceSettingsPage() {
               variant="outline"
               size="icon"
               onClick={copyApiKey}
-              aria-label="Copy API key"
+              aria-label={t("common.copy")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-emerald-500" />
@@ -214,19 +224,20 @@ export default function WorkspaceSettingsPage() {
             <AlertDialogTrigger asChild>
               <Button variant="outline" size="sm">
                 <RefreshCw className="h-4 w-4" />
-                Regenerate Key
+                {t("workspaceSettings.regenerateKey")}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Regenerate API Key?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("workspaceSettings.regenerateTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will invalidate the current API key. All widgets using
-                  the old key will stop working immediately.
+                  {t("workspaceSettings.regenerateDescription")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleRegenerateKey}
                   disabled={regenerateMutation.isPending}
@@ -234,7 +245,7 @@ export default function WorkspaceSettingsPage() {
                   {regenerateMutation.isPending && (
                     <Loader2 className="animate-spin" />
                   )}
-                  Regenerate
+                  {t("common.regenerate")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -245,15 +256,17 @@ export default function WorkspaceSettingsPage() {
       {/* Workspace settings */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Workspace Settings</CardTitle>
+          <CardTitle className="text-base">
+            {t("workspaceSettings.title")}
+          </CardTitle>
           <CardDescription>
-            Update your workspace configuration.
+            {t("workspaceSettings.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSave)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="workspaceName">Workspace Name</Label>
+              <Label htmlFor="workspaceName">{t("workspaces.name")}</Label>
               <Input id="workspaceName" {...register("name")} />
               {errors.name && (
                 <p className="text-sm text-destructive">
@@ -267,7 +280,7 @@ export default function WorkspaceSettingsPage() {
               disabled={!isDirty || updateMutation.isPending}
             >
               {updateMutation.isPending && <Loader2 className="animate-spin" />}
-              Save Changes
+              {t("common.saveChanges")}
             </Button>
           </form>
         </CardContent>
@@ -277,10 +290,10 @@ export default function WorkspaceSettingsPage() {
       <Card className="border-destructive/30">
         <CardHeader>
           <CardTitle className="text-base text-destructive">
-            Danger Zone
+            {t("workspaceSettings.dangerZone")}
           </CardTitle>
           <CardDescription>
-            Irreversible actions that affect your workspace.
+            {t("workspaceSettings.dangerDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -288,20 +301,22 @@ export default function WorkspaceSettingsPage() {
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
                 <Trash2 className="h-4 w-4" />
-                Delete Workspace
+                {t("common.delete")} {t("workspaces.title")}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Workspace?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("workspaceSettings.deleteTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  workspace &quot;{workspace.name}&quot; and all associated
-                  data.
+                  {t("workspaceSettings.deleteDescription", {
+                    name: workspace.name,
+                  })}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDelete}
                   disabled={deleteMutation.isPending}
@@ -310,7 +325,7 @@ export default function WorkspaceSettingsPage() {
                   {deleteMutation.isPending && (
                     <Loader2 className="animate-spin" />
                   )}
-                  Delete
+                  {t("common.delete")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

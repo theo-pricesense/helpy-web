@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FolderKanban, Loader2, Plus, Search, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,19 +24,20 @@ import { Label } from "@/components/ui/label";
 import { useCreateWorkspace, useWorkspaces } from "@/hooks/use-workspaces";
 import { WorkspaceResponseDto } from "@/lib/api/generated";
 
-const createWorkspaceSchema = z.object({
-  name: z.string().min(1, "워크스페이스 이름을 입력해주세요."),
-});
-
-type CreateWorkspaceForm = z.infer<typeof createWorkspaceSchema>;
-
 export default function WorkspacesPage() {
+  const t = useTranslations();
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
   const { data: workspaces = [], isLoading } = useWorkspaces();
   const createMutation = useCreateWorkspace();
+
+  const createWorkspaceSchema = z.object({
+    name: z.string().min(1, t("workspaces.nameRequired")),
+  });
+
+  type CreateWorkspaceForm = z.infer<typeof createWorkspaceSchema>;
 
   const form = useForm<CreateWorkspaceForm>({
     resolver: zodResolver(createWorkspaceSchema),
@@ -59,6 +61,12 @@ export default function WorkspacesPage() {
     ws.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const getStatusLabel = (status: WorkspaceResponseDto.status) => {
+    return status === WorkspaceResponseDto.status.ACTIVE
+      ? t("status.active")
+      : t("status.inactive");
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -72,32 +80,32 @@ export default function WorkspacesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Workspaces
+            {t("workspaces.title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage your AI customer service workspaces.
+            {t("workspaces.description")}
           </p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4" />
-              New Workspace
+              {t("workspaces.new")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <form onSubmit={form.handleSubmit(handleCreate)}>
               <DialogHeader>
-                <DialogTitle>Create Workspace</DialogTitle>
+                <DialogTitle>{t("workspaces.createTitle")}</DialogTitle>
                 <DialogDescription>
-                  A workspace represents one product or service channel.
+                  {t("workspaces.createDescription")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-2 py-4">
-                <Label htmlFor="ws-name">Workspace Name</Label>
+                <Label htmlFor="ws-name">{t("workspaces.name")}</Label>
                 <Input
                   id="ws-name"
-                  placeholder="e.g. Customer Portal"
+                  placeholder={t("workspaces.namePlaceholder")}
                   autoFocus
                   {...form.register("name")}
                 />
@@ -113,13 +121,13 @@ export default function WorkspacesPage() {
                   variant="outline"
                   onClick={() => setCreateOpen(false)}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
                 <Button type="submit" disabled={createMutation.isPending}>
                   {createMutation.isPending && (
                     <Loader2 className="animate-spin" />
                   )}
-                  Create
+                  {t("common.create")}
                 </Button>
               </DialogFooter>
             </form>
@@ -133,7 +141,7 @@ export default function WorkspacesPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search workspaces..."
+          placeholder={t("workspaces.searchPlaceholder")}
           className="pl-9"
         />
       </div>
@@ -144,12 +152,12 @@ export default function WorkspacesPage() {
           <CardContent className="flex flex-col items-center justify-center py-16">
             <FolderKanban className="h-10 w-10 text-muted-foreground/40 mb-3" />
             <p className="text-sm font-medium text-foreground">
-              No workspaces found
+              {t("workspaces.empty")}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {search
-                ? "Try a different search term."
-                : "Create your first workspace to get started."}
+                ? t("workspaces.emptySearch")
+                : t("workspaces.emptyCreate")}
             </p>
           </CardContent>
         </Card>
@@ -177,7 +185,7 @@ export default function WorkspacesPage() {
                     {ws.status === WorkspaceResponseDto.status.ACTIVE && (
                       <Zap className="h-3 w-3 mr-1" />
                     )}
-                    {ws.status}
+                    {getStatusLabel(ws.status)}
                   </Badge>
                 </div>
                 <div className="mt-4">
@@ -185,7 +193,8 @@ export default function WorkspacesPage() {
                     {ws.name}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Created {new Date(ws.createdAt).toLocaleDateString("ko-KR")}
+                    {t("common.created")}{" "}
+                    {new Date(ws.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </CardContent>
