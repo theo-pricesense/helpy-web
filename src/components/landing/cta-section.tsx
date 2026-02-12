@@ -18,13 +18,13 @@ export function CtaSection() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-3xl text-center">
+      <div className="relative mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-bold text-balance text-foreground sm:text-4xl md:text-5xl">
           지금 바로 시작하세요
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground leading-relaxed">
-          무료 체험으로 Helpy의 AI 고객 서비스를 경험해보세요. 신용카드 없이
-          시작할 수 있습니다.
+          월 300건 AI 응답을 무료로 시작하세요. 신용카드 없이 바로 이용할 수
+          있습니다.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -45,7 +45,8 @@ export function CtaSection() {
         </div>
 
         <p className="mt-6 text-sm text-muted-foreground">
-          14일 무료 체험 &middot; 설정 5분 소요 &middot; 언제든지 취소 가능
+          Free 플랜 무기한 제공 &middot; 설정 5분 소요 &middot; 언제든지
+          업그레이드 가능
         </p>
       </div>
     </section>

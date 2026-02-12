@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Minus, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Footer } from "@/components/landing/footer";
@@ -24,118 +24,139 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat("ko-KR").format(price);
+
 const plans = [
   {
-    name: "스타터",
-    description: "AI 지원을 시작하는 소규모 팀을 위한 플랜입니다.",
-    monthlyPrice: 29,
-    yearlyPrice: 24,
-    cta: "무료 체험 시작",
+    name: "Free",
+    description: "AI 고객 서비스를 처음 시작하는 분들을 위한 플랜",
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    promoPrice: null,
+    cta: "무료로 시작하기",
     ctaVariant: "outline" as const,
+    highlight: false,
+    aiResponses: "300",
     features: [
-      "프로젝트 1개",
-      "월 1,000건 대화",
-      "기본 AI 모델 (GPT-4o mini)",
-      "문서 5개",
-      "이메일 지원",
-      "기본 분석",
+      { label: "월 AI 응답 300건", included: true },
+      { label: "워크스페이스 1개", included: true },
+      { label: "멤버 1명", included: true },
+      { label: "문서 50개/워크스페이스", included: true },
+      { label: "파일 업로드 10MB", included: true },
+      { label: "Gemini Flash-Lite", included: true },
+      { label: "데이터 보관 30일", included: true },
+      { label: "우선 지원", included: false },
     ],
   },
   {
-    name: "프로",
-    description: "고급 AI 기능이 필요한 성장하는 팀을 위한 플랜입니다.",
-    monthlyPrice: 99,
-    yearlyPrice: 79,
-    cta: "무료 체험 시작",
+    name: "Starter",
+    description: "소규모 팀을 위한 합리적인 시작점",
+    monthlyPrice: 49000,
+    yearlyPrice: 39200,
+    promoPrice: 34300,
+    cta: "시작하기",
+    ctaVariant: "outline" as const,
+    highlight: false,
+    aiResponses: "1,000",
+    features: [
+      { label: "월 AI 응답 1,000건", included: true },
+      { label: "워크스페이스 1개", included: true },
+      { label: "멤버 3명", included: true },
+      { label: "문서 200개/워크스페이스", included: true },
+      { label: "파일 업로드 50MB", included: true },
+      { label: "Gemini Flash-Lite", included: true },
+      { label: "데이터 보관 90일", included: true },
+      { label: "우선 지원", included: false },
+    ],
+  },
+  {
+    name: "Pro",
+    description: "성장하는 팀을 위한 강력한 AI 고객 서비스",
+    monthlyPrice: 299000,
+    yearlyPrice: 239200,
+    promoPrice: 209300,
+    cta: "시작하기",
     ctaVariant: "default" as const,
-    recommended: true,
+    highlight: true,
+    aiResponses: "20,000",
     features: [
-      "무제한 프로젝트",
-      "월 10,000건 대화",
-      "모든 AI 모델",
-      "무제한 문서",
-      "우선 지원",
-      "고급 분석",
-      "커스텀 위젯 스타일링",
-      "상담원 연결",
-      "웹 크롤링",
+      { label: "월 AI 응답 20,000건", included: true },
+      { label: "워크스페이스 무제한", included: true },
+      { label: "멤버 15명", included: true },
+      { label: "문서 무제한", included: true },
+      { label: "파일 업로드 100MB", included: true },
+      { label: "Gemini Flash-Lite", included: true },
+      { label: "데이터 보관 무제한", included: true },
+      { label: "우선 지원", included: true },
     ],
   },
   {
-    name: "엔터프라이즈",
-    description: "맞춤형 요구사항이 있는 대규모 조직을 위한 플랜입니다.",
+    name: "Enterprise",
+    description: "맞춤형 솔루션이 필요한 대규모 조직",
     monthlyPrice: null,
     yearlyPrice: null,
+    promoPrice: null,
     cta: "영업팀 문의",
     ctaVariant: "outline" as const,
+    highlight: false,
+    aiResponses: "무제한",
     features: [
-      "프로의 모든 기능",
-      "무제한 대화",
-      "맞춤형 AI 모델 학습",
-      "SSO & SAML",
-      "전담 계정 관리자",
-      "SLA 보장",
-      "온프레미스 배포",
-      "커스텀 연동",
-      "감사 로그",
-      "HIPAA 규정 준수",
+      { label: "월 AI 응답 무제한", included: true },
+      { label: "워크스페이스 무제한", included: true },
+      { label: "멤버 무제한", included: true },
+      { label: "문서 무제한", included: true },
+      { label: "파일 업로드 무제한", included: true },
+      { label: "AI 모델 선택 가능", included: true },
+      { label: "SLA 99.9%", included: true },
+      { label: "전용 지원", included: true },
     ],
   },
 ];
 
 const faqs = [
   {
-    question: "나중에 플랜을 변경할 수 있나요?",
+    question: "AI 응답이란 무엇인가요?",
     answer:
-      "네, 언제든지 플랜을 업그레이드하거나 다운그레이드할 수 있습니다. 업그레이드 시 남은 결제 기간에 대해 비례 계산됩니다. 다운그레이드 시 변경사항은 다음 결제 주기부터 적용됩니다.",
+      "AI가 고객에게 메시지 1건을 생성하면 1 AI 응답으로 카운트됩니다. 고객의 메시지나 상담원이 직접 작성한 응답은 과금되지 않습니다.",
   },
   {
-    question: "무료 체험이 있나요?",
+    question: "월 AI 응답 상한을 초과하면 어떻게 되나요?",
     answer:
-      "네! 모든 유료 플랜에는 14일 무료 체험이 제공됩니다. 시작하는 데 신용카드가 필요하지 않습니다. 구독을 결정하기 전에 모든 기능을 살펴볼 수 있습니다.",
+      "상한 초과 시 건당 23원의 추가 요금이 부과됩니다. 사전에 알림을 보내드리며, 상위 플랜으로 업그레이드하면 더 합리적인 비용으로 이용할 수 있습니다.",
   },
   {
-    question: "대화 한도를 초과하면 어떻게 되나요?",
+    question: "플랜을 변경할 수 있나요?",
     answer:
-      "한도에 가까워지면 알림을 보내드립니다. 추가 대화는 건당 요금이 부과되거나, 더 나은 가치를 위해 상위 플랜으로 업그레이드할 수 있습니다.",
+      "언제든 업그레이드 또는 다운그레이드할 수 있습니다. 업그레이드 시 남은 기간에 대해 일할 계산되며, 다운그레이드는 다음 결제 주기부터 적용됩니다. 추가 멤버는 월 15,000원/명, 추가 워크스페이스는 월 30,000원/개로 이용 가능합니다.",
   },
   {
-    question: "언제든지 취소할 수 있나요?",
+    question: "런칭 프로모션은 언제까지인가요?",
     answer:
-      "물론입니다. 장기 계약이 없습니다. 계정 설정에서 언제든지 취소할 수 있습니다. 현재 결제 기간이 끝날 때까지 계속 이용하실 수 있습니다.",
-  },
-  {
-    question: "스타트업 할인이 있나요?",
-    answer:
-      "네, 초기 단계 스타트업을 위한 특별 가격을 제공합니다. 회사 정보와 함께 영업팀에 연락주시면 맞춤형 플랜을 제안해 드리겠습니다.",
-  },
-  {
-    question: "AI 학습은 어떻게 작동하나요?",
-    answer:
-      "문서(PDF, TXT, MD, DOCX)를 업로드하거나 웹 크롤링을 위한 URL을 제공하세요. AI가 이를 처리하여 제품과 고객에 맞춤화된 지식 베이스를 구축합니다.",
+      "런칭 프로모션(30% 할인)은 한정 기간 동안 제공됩니다. 프로모션 기간 중 가입하시면 첫 결제 주기에 할인가가 적용됩니다.",
   },
 ];
 
 export default function PricingPage() {
-  const [isYearly, setIsYearly] = useState(true);
+  const [isYearly, setIsYearly] = useState(false);
 
   return (
     <main className="min-h-dvh">
       <LandingNavbar />
 
       <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {/* Header */}
-          <div className="text-center mb-16 space-y-4">
+          <div className="mb-16 space-y-4 text-center">
             <Badge variant="outline" className="px-3 py-1">
-              요금제
+              Pricing
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-balance text-foreground">
+            <h1 className="text-4xl font-bold tracking-tight text-balance text-foreground md:text-5xl">
               심플하고 투명한 요금제
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-              무료로 시작하고, 팀이 성장함에 따라 확장하세요. 숨겨진 비용이
-              없습니다.
+            <p className="mx-auto max-w-2xl text-lg text-pretty text-muted-foreground">
+              AI 응답 기반 과금으로, 사용한 만큼만 지불하세요. 무료로 시작하고
+              성장에 맞춰 확장하세요.
             </p>
 
             {/* Billing toggle */}
@@ -143,7 +164,7 @@ export default function PricingPage() {
               <Label
                 className={cn(
                   "text-sm",
-                  !isYearly && "text-foreground font-medium",
+                  !isYearly && "font-medium text-foreground",
                 )}
               >
                 월간
@@ -152,7 +173,7 @@ export default function PricingPage() {
               <Label
                 className={cn(
                   "text-sm",
-                  isYearly && "text-foreground font-medium",
+                  isYearly && "font-medium text-foreground",
                 )}
               >
                 연간
@@ -161,55 +182,86 @@ export default function PricingPage() {
                 </Badge>
               </Label>
             </div>
+
+            {/* Promo banner */}
+            <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm text-primary">
+              <Sparkles className="h-3.5 w-3.5" />
+              런칭 프로모션: 유료 플랜 30% 할인 중
+            </div>
           </div>
 
           {/* Plan cards */}
-          <div className="grid gap-6 md:grid-cols-3 items-start">
+          <div className="grid items-start gap-5 md:grid-cols-2 lg:grid-cols-4">
             {plans.map((plan) => {
-              const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+              const basePrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+              const promoPrice =
+                !isYearly && plan.promoPrice ? plan.promoPrice : null;
+              const displayPrice = promoPrice ?? basePrice;
+
               return (
                 <Card
                   key={plan.name}
                   className={cn(
-                    "relative",
-                    plan.recommended &&
-                      "border-primary shadow-lg shadow-primary/10 scale-[1.02]",
+                    "relative flex flex-col",
+                    plan.highlight &&
+                      "border-primary shadow-lg shadow-primary/10 md:scale-[1.03]",
                   )}
                 >
-                  {plan.recommended && (
+                  {plan.highlight && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground gap-1">
+                      <Badge className="gap-1 bg-primary text-primary-foreground">
                         <Sparkles className="h-3 w-3" />
-                        추천
+                        인기
                       </Badge>
                     </div>
                   )}
-                  <CardHeader className={cn(plan.recommended && "pt-8")}>
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
-                    <div className="pt-4">
-                      {price !== null ? (
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-4xl font-bold text-foreground">
-                            ${price}
-                          </span>
-                          <span className="text-muted-foreground">/월</span>
+                  <CardHeader className={cn(plan.highlight && "pt-8")}>
+                    <CardTitle className="text-lg">{plan.name}</CardTitle>
+                    <CardDescription className="min-h-[40px] text-xs">
+                      {plan.description}
+                    </CardDescription>
+                    <div className="pt-3">
+                      {displayPrice !== null ? (
+                        <div className="space-y-1">
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-3xl font-bold text-foreground">
+                              {"\u20A9"}
+                              {formatPrice(displayPrice)}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              /월
+                            </span>
+                          </div>
+                          {promoPrice && (
+                            <p className="text-xs text-muted-foreground line-through">
+                              {"\u20A9"}
+                              {formatPrice(plan.monthlyPrice!)}
+                            </p>
+                          )}
                         </div>
                       ) : (
-                        <span className="text-4xl font-bold text-foreground">
-                          맞춤형
+                        <span className="text-3xl font-bold text-foreground">
+                          별도 협의
                         </span>
                       )}
                     </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      월 AI 응답{" "}
+                      <span className="font-medium text-foreground">
+                        {plan.aiResponses}
+                      </span>
+                      건
+                    </p>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="flex flex-1 flex-col space-y-5">
                     <Button
                       variant={plan.ctaVariant}
                       className={cn(
                         "w-full",
-                        plan.recommended &&
+                        plan.highlight &&
                           "bg-primary text-primary-foreground hover:bg-primary/90",
                       )}
+                      size="sm"
                       asChild
                     >
                       <Link
@@ -218,19 +270,29 @@ export default function PricingPage() {
                         }
                       >
                         {plan.cta}
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
                     </Button>
 
-                    <ul className="space-y-3">
+                    <ul className="flex-1 space-y-2.5">
                       {plan.features.map((feature) => (
                         <li
-                          key={feature}
-                          className="flex items-start gap-2.5 text-sm"
+                          key={feature.label}
+                          className="flex items-start gap-2 text-xs"
                         >
-                          <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                          <span className="text-muted-foreground">
-                            {feature}
+                          {feature.included ? (
+                            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          ) : (
+                            <Minus className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/40" />
+                          )}
+                          <span
+                            className={cn(
+                              feature.included
+                                ? "text-muted-foreground"
+                                : "text-muted-foreground/40",
+                            )}
+                          >
+                            {feature.label}
                           </span>
                         </li>
                       ))}
@@ -240,18 +302,55 @@ export default function PricingPage() {
               );
             })}
           </div>
+
+          {/* Overage + Add-on info */}
+          <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-12">
+            <div className="text-center">
+              <p className="text-sm font-medium text-foreground">
+                AI 응답 초과 시
+              </p>
+              <p className="mt-1 text-2xl font-bold text-primary">
+                {"\u20A9"}23
+                <span className="text-sm font-normal text-muted-foreground">
+                  /건
+                </span>
+              </p>
+            </div>
+            <div className="hidden h-10 w-px bg-border sm:block" />
+            <div className="text-center">
+              <p className="text-sm font-medium text-foreground">추가 멤버</p>
+              <p className="mt-1 text-2xl font-bold text-primary">
+                {"\u20A9"}15,000
+                <span className="text-sm font-normal text-muted-foreground">
+                  /명/월
+                </span>
+              </p>
+            </div>
+            <div className="hidden h-10 w-px bg-border sm:block" />
+            <div className="text-center">
+              <p className="text-sm font-medium text-foreground">
+                추가 워크스페이스
+              </p>
+              <p className="mt-1 text-2xl font-bold text-primary">
+                {"\u20A9"}30,000
+                <span className="text-sm font-normal text-muted-foreground">
+                  /개/월
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-16 md:py-24 border-t border-border">
+      <section className="border-t border-border py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <div className="text-center mb-12">
+          <div className="mb-12 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
               자주 묻는 질문
             </h2>
-            <p className="text-muted-foreground mt-2">
-              Helpy 요금제에 대해 알아야 할 모든 것.
+            <p className="mt-2 text-muted-foreground">
+              요금제에 대해 궁금한 점이 있으신가요?
             </p>
           </div>
 
