@@ -5,8 +5,14 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { AiSettingsResponseDto } from "../models/AiSettingsResponseDto";
 import type { CreateWorkspaceDto } from "../models/CreateWorkspaceDto";
+import type { NotificationSettingsResponseDto } from "../models/NotificationSettingsResponseDto";
+import type { UpdateAiSettingsDto } from "../models/UpdateAiSettingsDto";
+import type { UpdateNotificationSettingsDto } from "../models/UpdateNotificationSettingsDto";
+import type { UpdateWidgetSettingsDto } from "../models/UpdateWidgetSettingsDto";
 import type { UpdateWorkspaceDto } from "../models/UpdateWorkspaceDto";
+import type { WidgetSettingsResponseDto } from "../models/WidgetSettingsResponseDto";
 import type { WorkspaceResponseDto } from "../models/WorkspaceResponseDto";
 export class WorkspacesService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
@@ -138,6 +144,150 @@ export class WorkspacesService {
       headers: {
         "X-Organization-Id": xOrganizationId,
       },
+    });
+  }
+  /**
+   * 위젯 설정 조회
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @returns WidgetSettingsResponseDto
+   * @throws ApiError
+   */
+  public getWidgetSettings(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<WidgetSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "GET",
+      url: "/workspaces/{id}/widget-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+    });
+  }
+  /**
+   * 위젯 설정 수정
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @param requestBody
+   * @returns WidgetSettingsResponseDto
+   * @throws ApiError
+   */
+  public updateWidgetSettings(
+    xOrganizationId: string,
+    id: string,
+    requestBody: UpdateWidgetSettingsDto,
+  ): CancelablePromise<WidgetSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "PATCH",
+      url: "/workspaces/{id}/widget-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+      body: requestBody,
+      mediaType: "application/json",
+    });
+  }
+  /**
+   * AI 설정 조회
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @returns AiSettingsResponseDto
+   * @throws ApiError
+   */
+  public getAiSettings(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<AiSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "GET",
+      url: "/workspaces/{id}/ai-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+    });
+  }
+  /**
+   * AI 설정 수정
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @param requestBody
+   * @returns AiSettingsResponseDto
+   * @throws ApiError
+   */
+  public updateAiSettings(
+    xOrganizationId: string,
+    id: string,
+    requestBody: UpdateAiSettingsDto,
+  ): CancelablePromise<AiSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "PATCH",
+      url: "/workspaces/{id}/ai-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+      body: requestBody,
+      mediaType: "application/json",
+    });
+  }
+  /**
+   * 알림 설정 조회
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @returns NotificationSettingsResponseDto
+   * @throws ApiError
+   */
+  public getNotificationSettings(
+    xOrganizationId: string,
+    id: string,
+  ): CancelablePromise<NotificationSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "GET",
+      url: "/workspaces/{id}/notification-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+    });
+  }
+  /**
+   * 알림 설정 수정
+   * @param xOrganizationId 조직 ID
+   * @param id
+   * @param requestBody
+   * @returns NotificationSettingsResponseDto
+   * @throws ApiError
+   */
+  public updateNotificationSettings(
+    xOrganizationId: string,
+    id: string,
+    requestBody: UpdateNotificationSettingsDto,
+  ): CancelablePromise<NotificationSettingsResponseDto> {
+    return this.httpRequest.request({
+      method: "PATCH",
+      url: "/workspaces/{id}/notification-settings",
+      path: {
+        id: id,
+      },
+      headers: {
+        "X-Organization-Id": xOrganizationId,
+      },
+      body: requestBody,
+      mediaType: "application/json",
     });
   }
 }

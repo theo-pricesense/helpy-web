@@ -113,5 +113,34 @@
     "minutesAgo": "{minutes}m ago",
     "hoursAgo": "{hours}h ago",
     "daysAgo": "{days}d ago"
+  },
+  "widget": {
+    "title": "Widget",
+    "description": "Customize the chat widget for your website.",
+    "style": "Style",
+    "themeColor": "Theme Color",
+    "position": "Position",
+    "positionBottomRight": "Bottom Right",
+    "positionBottomLeft": "Bottom Left",
+    "welcomeMessage": "Welcome Message",
+    "defaultWelcomeMessage": "Hello! How can I help you today?",
+    "placeholder": "Input Placeholder",
+    "placeholderHint": "Type a message...",
+    "behavior": "Behavior",
+    "autoOpenDelay": "Auto-open Delay (seconds)",
+    "autoOpenDelayHint": "Set to 0 to disable auto-open.",
+    "businessHours": "Business Hours",
+    "businessHoursDescription": "Only show the widget during business hours.",
+    "start": "Start",
+    "end": "End",
+    "installCode": "Installation Code",
+    "installCodeDescription": "Add this snippet to your website's <head> or before </body>.",
+    "preview": "Preview",
+    "copied": "Copied",
+    "toast": {
+      "codeCopied": "Code copied to clipboard.",
+      "saved": "Widget settings saved.",
+      "saveFailed": "Failed to save widget settings."
+    }
   }
 }

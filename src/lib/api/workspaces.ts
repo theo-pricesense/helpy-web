@@ -1,6 +1,10 @@
 import { getCurrentOrgId } from "@/stores/organization-store";
 import { apiClient, withTokenRefresh } from "./client";
-import type { CreateWorkspaceDto, UpdateWorkspaceDto } from "./generated";
+import type {
+  CreateWorkspaceDto,
+  UpdateWidgetSettingsDto,
+  UpdateWorkspaceDto,
+} from "./generated";
 
 const getOrgId = () => {
   const orgId = getCurrentOrgId();
@@ -28,5 +32,13 @@ export const workspacesApi = {
   regenerateApiKey: (id: string) =>
     withTokenRefresh(() =>
       apiClient.workspaces.regenerateApiKey(getOrgId(), id),
+    ),
+  getWidgetSettings: (id: string) =>
+    withTokenRefresh(() =>
+      apiClient.workspaces.getWidgetSettings(getOrgId(), id),
+    ),
+  updateWidgetSettings: (id: string, data: UpdateWidgetSettingsDto) =>
+    withTokenRefresh(() =>
+      apiClient.workspaces.updateWidgetSettings(getOrgId(), id, data),
     ),
 };

@@ -113,5 +113,34 @@
     "minutesAgo": "{minutes}분 전",
     "hoursAgo": "{hours}시간 전",
     "daysAgo": "{days}일 전"
+  },
+  "widget": {
+    "title": "위젯",
+    "description": "웹사이트에 설치할 채팅 위젯을 커스터마이즈하세요.",
+    "style": "스타일",
+    "themeColor": "테마 색상",
+    "position": "위치",
+    "positionBottomRight": "오른쪽 하단",
+    "positionBottomLeft": "왼쪽 하단",
+    "welcomeMessage": "환영 메시지",
+    "defaultWelcomeMessage": "안녕하세요! 무엇을 도와드릴까요?",
+    "placeholder": "입력창 플레이스홀더",
+    "placeholderHint": "메시지를 입력하세요...",
+    "behavior": "동작",
+    "autoOpenDelay": "자동 열기 지연 (초)",
+    "autoOpenDelayHint": "0으로 설정하면 자동 열기가 비활성화됩니다.",
+    "businessHours": "업무 시간",
+    "businessHoursDescription": "업무 시간에만 위젯을 표시합니다.",
+    "start": "시작",
+    "end": "종료",
+    "installCode": "설치 코드",
+    "installCodeDescription": "웹사이트의 <head> 또는 </body> 앞에 이 코드를 추가하세요.",
+    "preview": "미리보기",
+    "copied": "복사됨",
+    "toast": {
+      "codeCopied": "코드가 클립보드에 복사되었습니다.",
+      "saved": "위젯 설정이 저장되었습니다.",
+      "saveFailed": "위젯 설정 저장에 실패했습니다."
+    }
   }
 }
