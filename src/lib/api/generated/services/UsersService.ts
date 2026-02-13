@@ -40,10 +40,10 @@ export class UsersService {
   }
   /**
    * 회원 탈퇴
-   * @returns any
+   * @returns MessageResponseDto
    * @throws ApiError
    */
-  public deleteMe(): CancelablePromise<any> {
+  public deleteMe(): CancelablePromise<MessageResponseDto> {
     return this.httpRequest.request({
       method: "DELETE",
       url: "/users/me",

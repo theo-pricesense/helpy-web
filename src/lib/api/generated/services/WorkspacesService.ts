@@ -31,7 +31,7 @@ export class WorkspacesService {
       method: "POST",
       url: "/workspaces",
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -50,7 +50,7 @@ export class WorkspacesService {
       method: "GET",
       url: "/workspaces",
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -72,7 +72,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -96,7 +96,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -120,7 +120,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -142,7 +142,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -164,7 +164,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -188,7 +188,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -212,7 +212,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -236,7 +236,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
       body: requestBody,
       mediaType: "application/json",
@@ -260,7 +260,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
     });
   }
@@ -284,7 +284,7 @@ export class WorkspacesService {
         id: id,
       },
       headers: {
-        "X-Organization-Id": xOrganizationId,
+        "x-organization-id": xOrganizationId,
       },
       body: requestBody,
       mediaType: "application/json",

@@ -5,6 +5,8 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { RequestAgentDto } from "../models/RequestAgentDto";
+import type { RequestAgentResponseDto } from "../models/RequestAgentResponseDto";
 import type { SendMessageDto } from "../models/SendMessageDto";
 import type { StartConversationDto } from "../models/StartConversationDto";
 import type { StartConversationResponseDto } from "../models/StartConversationResponseDto";
@@ -101,6 +103,32 @@ export class WidgetService {
       headers: {
         "X-API-Key": xApiKey,
       },
+    });
+  }
+  /**
+   * 상담원 연결 요청
+   * @param conversationId
+   * @param requestBody
+   * @param xApiKey Workspace API Key
+   * @returns RequestAgentResponseDto
+   * @throws ApiError
+   */
+  public requestAgent(
+    conversationId: string,
+    requestBody: RequestAgentDto,
+    xApiKey?: string,
+  ): CancelablePromise<RequestAgentResponseDto> {
+    return this.httpRequest.request({
+      method: "POST",
+      url: "/widget/conversations/{conversationId}/request-agent",
+      path: {
+        conversationId: conversationId,
+      },
+      headers: {
+        "X-API-Key": xApiKey,
+      },
+      body: requestBody,
+      mediaType: "application/json",
     });
   }
 }
