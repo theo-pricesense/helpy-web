@@ -49,6 +49,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { creditCardsApi, paymentsApi, subscriptionsApi } from "@/lib/api";
+import { requestBillingAuth } from "@/lib/toss-payments";
 import type {
   CreditCard,
   Payment,
@@ -56,6 +57,7 @@ import type {
   SubscriptionUsage,
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/auth-store";
 
 // ===== Plan display map =====
 type PlanCode = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
@@ -172,6 +174,7 @@ const validPlans: PlanCode[] = ["FREE", "STARTER", "PRO", "ENTERPRISE"];
 export default function BillingPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const user = useAuthStore((s) => s.user);
   const [activeTab, setActiveTab] = useState<BillingTab>("overview");
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [usage, setUsage] = useState<SubscriptionUsage | null>(null);
@@ -225,17 +228,19 @@ export default function BillingPage() {
   }, [loadData]);
 
   const handleAddCard = async () => {
+    if (!user?.id) {
+      toast.error("Please login first");
+      return;
+    }
+
     setAddingCard(true);
     try {
-      // In production: use Toss Payments SDK to get authKey
-      // const tossPayments = await loadTossPayments(clientKey)
-      // const payment = tossPayments.payment({ customerKey })
-      // await payment.requestBillingKeyAuth("CARD", { ... })
-      // Then send authKey to backend
-      toast.info("Toss Payments integration required");
-    } catch {
-      toast.error("Failed to add card");
-    } finally {
+      // Toss Payments SDK로 빌링키 발급 페이지 열기
+      // 성공/실패 시 /settings/billing/success 또는 /fail로 리다이렉트됨
+      await requestBillingAuth(user.id);
+    } catch (error) {
+      console.error("Failed to open billing auth:", error);
+      toast.error("Failed to open card registration");
       setAddingCard(false);
     }
   };
