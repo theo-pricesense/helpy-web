@@ -5,6 +5,7 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { CreditCardResponseDto } from "../models/CreditCardResponseDto";
 import type { RegisterCreditCardDto } from "../models/RegisterCreditCardDto";
 export class CreditCardsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
@@ -32,12 +33,12 @@ export class CreditCardsService {
   /**
    * 카드 목록 조회
    * @param xOrganizationId 조직 ID
-   * @returns any 카드 목록
+   * @returns CreditCardResponseDto 카드 목록
    * @throws ApiError
    */
   public creditCardsControllerGetCreditCards(
     xOrganizationId: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<Array<CreditCardResponseDto>> {
     return this.httpRequest.request({
       method: "GET",
       url: "/credit-cards",

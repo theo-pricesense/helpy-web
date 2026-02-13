@@ -5,6 +5,7 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { GetPaymentsResponseDto } from "../models/GetPaymentsResponseDto";
 export class PaymentsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
@@ -12,14 +13,14 @@ export class PaymentsService {
    * @param xOrganizationId 조직 ID
    * @param limit
    * @param offset
-   * @returns any 결제 내역
+   * @returns GetPaymentsResponseDto 결제 내역
    * @throws ApiError
    */
   public paymentsControllerGetPayments(
     xOrganizationId: string,
     limit?: number,
     offset?: number,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<GetPaymentsResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/payments",

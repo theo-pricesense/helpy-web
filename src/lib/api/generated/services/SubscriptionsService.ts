@@ -6,17 +6,18 @@
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import type { ChangePlanDto } from "../models/ChangePlanDto";
+import type { SubscriptionResponseDto } from "../models/SubscriptionResponseDto";
 export class SubscriptionsService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 현재 구독 정보 조회
    * @param xOrganizationId 조직 ID
-   * @returns any 구독 정보 반환
+   * @returns SubscriptionResponseDto 구독 정보 반환
    * @throws ApiError
    */
   public subscriptionsControllerGetSubscription(
     xOrganizationId: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<SubscriptionResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/subscriptions",

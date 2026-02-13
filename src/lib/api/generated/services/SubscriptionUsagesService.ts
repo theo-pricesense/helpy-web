@@ -5,17 +5,18 @@
 
 import type { BaseHttpRequest } from "../core/BaseHttpRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
+import type { SubscriptionUsageResponseDto } from "../models/SubscriptionUsageResponseDto";
 export class SubscriptionUsagesService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
   /**
    * 현재 구독 사용량 조회
    * @param xOrganizationId 조직 ID
-   * @returns any 사용량 정보 반환
+   * @returns SubscriptionUsageResponseDto 사용량 정보 반환
    * @throws ApiError
    */
   public subscriptionUsagesControllerGetUsage(
     xOrganizationId: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<SubscriptionUsageResponseDto> {
     return this.httpRequest.request({
       method: "GET",
       url: "/subscription-usages",
