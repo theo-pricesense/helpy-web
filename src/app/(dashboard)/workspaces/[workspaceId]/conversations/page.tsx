@@ -44,7 +44,12 @@ export default function ConversationsPage() {
     WAITING: {
       label: t("status.waiting"),
       className:
-        "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+        "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
+    },
+    ASSIGNED: {
+      label: t("status.assigned"),
+      className:
+        "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     },
     CLOSED: {
       label: t("status.closed"),
@@ -92,13 +97,14 @@ export default function ConversationsPage() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-36">
+          <SelectTrigger className="w-40">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("common.all")}</SelectItem>
             <SelectItem value="ACTIVE">{t("status.active")}</SelectItem>
             <SelectItem value="WAITING">{t("status.waiting")}</SelectItem>
+            <SelectItem value="ASSIGNED">{t("status.assigned")}</SelectItem>
             <SelectItem value="CLOSED">{t("status.closed")}</SelectItem>
           </SelectContent>
         </Select>

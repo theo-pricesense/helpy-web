@@ -20,7 +20,8 @@
     "processing": "처리 중",
     "completed": "완료",
     "failed": "실패",
-    "waiting": "대기",
+    "waiting": "상담원 요청",
+    "assigned": "상담 중",
     "closed": "종료"
   },
   "workspaces": {

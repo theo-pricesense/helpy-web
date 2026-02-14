@@ -56,6 +56,7 @@ export namespace ConversationDetailResponseDto {
   export enum status {
     ACTIVE = "ACTIVE",
     WAITING = "WAITING",
+    ASSIGNED = "ASSIGNED",
     CLOSED = "CLOSED",
   }
   /**

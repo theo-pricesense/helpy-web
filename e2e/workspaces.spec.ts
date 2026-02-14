@@ -19,14 +19,14 @@ test.describe("워크스페이스", () => {
     });
 
     await expect(
-      page.getByRole("heading", { name: "Workspaces" }),
+      page.getByRole("heading", { name: "워크스페이스" }),
     ).toBeVisible();
     await expect(
-      page.getByText("Manage your AI customer service workspaces."),
+      page.getByText("AI 고객 서비스 워크스페이스를 관리하세요."),
     ).toBeVisible();
   });
 
-  test("New Workspace 버튼이 표시되어야 한다", async ({
+  test("새 워크스페이스 버튼이 표시되어야 한다", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/workspaces");
@@ -36,7 +36,7 @@ test.describe("워크스페이스", () => {
     });
 
     await expect(
-      page.getByRole("button", { name: "New Workspace" }),
+      page.getByRole("button", { name: "새 워크스페이스" }),
     ).toBeVisible();
   });
 
@@ -49,12 +49,12 @@ test.describe("워크스페이스", () => {
       timeout: 10000,
     });
 
-    await page.getByRole("button", { name: "New Workspace" }).click();
+    await page.getByRole("button", { name: "새 워크스페이스" }).click();
 
-    await expect(page.getByText("Create Workspace")).toBeVisible();
-    await expect(page.getByLabel("Workspace Name")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Create" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Cancel" })).toBeVisible();
+    await expect(page.getByText("워크스페이스 생성")).toBeVisible();
+    await expect(page.getByLabel("워크스페이스 이름")).toBeVisible();
+    await expect(page.getByRole("button", { name: "생성" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "취소" })).toBeVisible();
   });
 
   test("워크스페이스 이름이 비어있으면 유효성 검증 에러가 표시되어야 한다", async ({
@@ -66,15 +66,15 @@ test.describe("워크스페이스", () => {
       timeout: 10000,
     });
 
-    await page.getByRole("button", { name: "New Workspace" }).click();
-    await page.getByRole("button", { name: "Create" }).click();
+    await page.getByRole("button", { name: "새 워크스페이스" }).click();
+    await page.getByRole("button", { name: "생성" }).click();
 
     await expect(
       page.getByText("워크스페이스 이름을 입력해주세요."),
     ).toBeVisible();
   });
 
-  test("Cancel 버튼으로 다이얼로그가 닫혀야 한다", async ({
+  test("취소 버튼으로 다이얼로그가 닫혀야 한다", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/workspaces");
@@ -83,11 +83,11 @@ test.describe("워크스페이스", () => {
       timeout: 10000,
     });
 
-    await page.getByRole("button", { name: "New Workspace" }).click();
-    await expect(page.getByText("Create Workspace")).toBeVisible();
+    await page.getByRole("button", { name: "새 워크스페이스" }).click();
+    await expect(page.getByText("워크스페이스 생성")).toBeVisible();
 
-    await page.getByRole("button", { name: "Cancel" }).click();
-    await expect(page.getByText("Create Workspace")).toBeHidden();
+    await page.getByRole("button", { name: "취소" }).click();
+    await expect(page.getByText("워크스페이스 생성")).toBeHidden();
   });
 
   test("워크스페이스가 없으면 빈 상태 메시지가 표시되어야 한다", async ({
@@ -107,7 +107,7 @@ test.describe("워크스페이스", () => {
       .catch(() => false);
 
     if (!hasWorkspaces) {
-      await expect(page.getByText("No workspaces found")).toBeVisible();
+      await expect(page.getByText("워크스페이스가 없습니다")).toBeVisible();
     }
   });
 });

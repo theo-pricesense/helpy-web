@@ -119,8 +119,7 @@ export default function MembersPage() {
 
   const { data: members = [], isLoading: membersLoading } =
     useOrganizationMembers();
-  const { data: invitations = [], isLoading: invitationsLoading } =
-    useOrganizationInvitations();
+  const { data: invitations = [] } = useOrganizationInvitations();
   const inviteMutation = useInviteMember();
   const removeMutation = useRemoveMember();
   const cancelMutation = useCancelInvitation();
@@ -187,7 +186,7 @@ export default function MembersPage() {
   if (membersLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -224,7 +223,7 @@ export default function MembersPage() {
                   <Label htmlFor="invite-email">Email address</Label>
                   <Input
                     id="invite-email"
-                    type="email"
+                    type="text"
                     placeholder="colleague@company.com"
                     autoFocus
                     {...form.register("email")}

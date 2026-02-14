@@ -20,7 +20,8 @@
     "processing": "Processing",
     "completed": "Completed",
     "failed": "Failed",
-    "waiting": "Waiting",
+    "waiting": "Agent Requested",
+    "assigned": "Assigned",
     "closed": "Closed"
   },
   "workspaces": {

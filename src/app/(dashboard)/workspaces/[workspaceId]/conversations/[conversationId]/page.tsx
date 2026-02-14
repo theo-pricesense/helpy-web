@@ -46,7 +46,12 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   WAITING: {
     label: "Waiting",
     className:
-      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+      "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
+  },
+  ASSIGNED: {
+    label: "Assigned",
+    className:
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
   },
   CLOSED: { label: "Closed", className: "bg-muted text-muted-foreground" },
 };
@@ -86,8 +91,9 @@ export default function ConversationDetailPage() {
   });
 
   const messages = conversation?.messages ?? [];
-  const isActive =
-    conversation?.status === ConversationDetailResponseDto.status.ACTIVE;
+  const canSendMessage =
+    conversation?.status === ConversationDetailResponseDto.status.ACTIVE ||
+    conversation?.status === ConversationDetailResponseDto.status.ASSIGNED;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: scroll when messages change
   useEffect(() => {
@@ -160,7 +166,7 @@ export default function ConversationDetailPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          {isActive && (
+          {canSendMessage && (
             <Button
               variant="outline"
               size="sm"
@@ -264,8 +270,8 @@ export default function ConversationDetailPage() {
         </div>
       </ScrollArea>
 
-      {/* Input - only for active conversations */}
-      {isActive && (
+      {/* Input - only for active/assigned conversations */}
+      {canSendMessage && (
         <>
           <Separator />
           <div className="pt-4">

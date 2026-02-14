@@ -31,6 +31,7 @@ export namespace WidgetConversationResponseDto {
   export enum status {
     ACTIVE = "ACTIVE",
     WAITING = "WAITING",
+    ASSIGNED = "ASSIGNED",
     CLOSED = "CLOSED",
   }
 }

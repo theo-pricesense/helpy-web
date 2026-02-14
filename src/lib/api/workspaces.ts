@@ -2,6 +2,7 @@ import { getCurrentOrgId } from "@/stores/organization-store";
 import { apiClient, withTokenRefresh } from "./client";
 import type {
   CreateWorkspaceDto,
+  UpdateNotificationSettingsDto,
   UpdateWidgetSettingsDto,
   UpdateWorkspaceDto,
 } from "./generated";
@@ -40,5 +41,16 @@ export const workspacesApi = {
   updateWidgetSettings: (id: string, data: UpdateWidgetSettingsDto) =>
     withTokenRefresh(() =>
       apiClient.workspaces.updateWidgetSettings(getOrgId(), id, data),
+    ),
+  getNotificationSettings: (id: string) =>
+    withTokenRefresh(() =>
+      apiClient.workspaces.getNotificationSettings(getOrgId(), id),
+    ),
+  updateNotificationSettings: (
+    id: string,
+    data: UpdateNotificationSettingsDto,
+  ) =>
+    withTokenRefresh(() =>
+      apiClient.workspaces.updateNotificationSettings(getOrgId(), id, data),
     ),
 };
