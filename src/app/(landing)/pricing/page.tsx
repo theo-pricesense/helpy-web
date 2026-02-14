@@ -37,15 +37,14 @@ const plans = [
     cta: "무료로 시작하기",
     ctaVariant: "outline" as const,
     highlight: false,
-    aiResponses: "300",
+    limits: {
+      aiResponses: "300건",
+      workspaces: "1개",
+      members: "1명",
+      aiModel: "Flash-Lite",
+    },
     features: [
-      { label: "월 AI 응답 300건", included: true },
-      { label: "워크스페이스 1개", included: true },
-      { label: "멤버 1명", included: true },
-      { label: "문서 50개/워크스페이스", included: true },
-      { label: "파일 업로드 10MB", included: true },
-      { label: "Gemini Flash-Lite", included: true },
-      { label: "데이터 보관 30일", included: true },
+      { label: "문서 업로드", included: true },
       { label: "우선 지원", included: false },
     ],
   },
@@ -53,20 +52,19 @@ const plans = [
     name: "Starter",
     description: "소규모 팀을 위한 합리적인 시작점",
     monthlyPrice: 49000,
-    yearlyPrice: 39200,
-    promoPrice: 34300,
+    yearlyPrice: 39000,
+    promoPrice: 24500,
     cta: "시작하기",
     ctaVariant: "outline" as const,
     highlight: false,
-    aiResponses: "1,000",
+    limits: {
+      aiResponses: "1,000건",
+      workspaces: "1개",
+      members: "3명",
+      aiModel: "Flash",
+    },
     features: [
-      { label: "월 AI 응답 1,000건", included: true },
-      { label: "워크스페이스 1개", included: true },
-      { label: "멤버 3명", included: true },
-      { label: "문서 200개/워크스페이스", included: true },
-      { label: "파일 업로드 50MB", included: true },
-      { label: "Gemini Flash-Lite", included: true },
-      { label: "데이터 보관 90일", included: true },
+      { label: "문서 업로드", included: true },
       { label: "우선 지원", included: false },
     ],
   },
@@ -74,20 +72,19 @@ const plans = [
     name: "Pro",
     description: "성장하는 팀을 위한 강력한 AI 고객 서비스",
     monthlyPrice: 299000,
-    yearlyPrice: 239200,
-    promoPrice: 209300,
+    yearlyPrice: 239000,
+    promoPrice: 149500,
     cta: "시작하기",
     ctaVariant: "default" as const,
     highlight: true,
-    aiResponses: "20,000",
+    limits: {
+      aiResponses: "20,000건",
+      workspaces: "무제한",
+      members: "15명",
+      aiModel: "Flash",
+    },
     features: [
-      { label: "월 AI 응답 20,000건", included: true },
-      { label: "워크스페이스 무제한", included: true },
-      { label: "멤버 15명", included: true },
-      { label: "문서 무제한", included: true },
-      { label: "파일 업로드 100MB", included: true },
-      { label: "Gemini Flash-Lite", included: true },
-      { label: "데이터 보관 365일", included: true },
+      { label: "문서 업로드", included: true },
       { label: "우선 지원", included: true },
     ],
   },
@@ -100,15 +97,14 @@ const plans = [
     cta: "영업팀 문의",
     ctaVariant: "outline" as const,
     highlight: false,
-    aiResponses: "무제한",
+    limits: {
+      aiResponses: "무제한",
+      workspaces: "무제한",
+      members: "무제한",
+      aiModel: "선택 가능",
+    },
     features: [
-      { label: "월 AI 응답 무제한", included: true },
-      { label: "워크스페이스 무제한", included: true },
-      { label: "멤버 무제한", included: true },
-      { label: "문서 무제한", included: true },
-      { label: "파일 업로드 무제한", included: true },
-      { label: "AI 모델 선택 가능", included: true },
-      { label: "데이터 보관 무제한", included: true },
+      { label: "문서 업로드", included: true },
       { label: "SLA 99.9%", included: true },
       { label: "전용 지원", included: true },
     ],
@@ -187,7 +183,7 @@ export default function PricingPage() {
             {/* Promo banner */}
             <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm text-primary">
               <Sparkles className="h-3.5 w-3.5" />
-              런칭 프로모션: 유료 플랜 30% 할인 중
+              런칭 프로모션: 첫 달 50% 할인
             </div>
           </div>
 
@@ -216,7 +212,7 @@ export default function PricingPage() {
                       </Badge>
                     </div>
                   )}
-                  <CardHeader className={cn(plan.highlight && "pt-8")}>
+                  <CardHeader className="lg:pt-8">
                     <CardTitle className="text-lg">{plan.name}</CardTitle>
                     <CardDescription className="min-h-[40px] text-xs">
                       {plan.description}
@@ -232,29 +228,65 @@ export default function PricingPage() {
                             <span className="text-sm text-muted-foreground">
                               /월
                             </span>
+                            {promoPrice && (
+                              <span className="text-xs text-primary">
+                                첫 달
+                              </span>
+                            )}
                           </div>
-                          {promoPrice && (
-                            <p className="text-xs text-muted-foreground line-through">
-                              {"\u20A9"}
-                              {formatPrice(plan.monthlyPrice!)}
-                            </p>
-                          )}
+                          <p
+                            className={cn(
+                              "text-xs",
+                              promoPrice
+                                ? "text-muted-foreground"
+                                : "invisible",
+                            )}
+                          >
+                            {promoPrice
+                              ? `이후 \u20A9${formatPrice(plan.monthlyPrice!)}/월`
+                              : `\u20A9${formatPrice(plan.monthlyPrice ?? 0)}`}
+                          </p>
                         </div>
                       ) : (
-                        <span className="text-3xl font-bold text-foreground">
-                          별도 협의
-                        </span>
+                        <div className="space-y-1">
+                          <span className="text-3xl font-bold text-foreground">
+                            별도 협의
+                          </span>
+                          <p className="invisible text-xs">{"\u20A9"}0</p>
+                        </div>
                       )}
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      월 AI 응답{" "}
-                      <span className="font-medium text-foreground">
-                        {plan.aiResponses}
-                      </span>
-                      건
-                    </p>
+                    {/* Limits */}
+                    <div className="mt-4 space-y-1.5 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">AI 응답</span>
+                        <span className="font-medium text-foreground">
+                          {plan.limits.aiResponses}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">AI 모델</span>
+                        <span className="font-medium text-foreground">
+                          {plan.limits.aiModel}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          워크스페이스
+                        </span>
+                        <span className="font-medium text-foreground">
+                          {plan.limits.workspaces}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">멤버</span>
+                        <span className="font-medium text-foreground">
+                          {plan.limits.members}
+                        </span>
+                      </div>
+                    </div>
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col space-y-5">
+                  <CardContent className="flex flex-1 flex-col">
                     <Button
                       variant={plan.ctaVariant}
                       className={cn(
@@ -275,7 +307,7 @@ export default function PricingPage() {
                       </Link>
                     </Button>
 
-                    <ul className="flex-1 space-y-2.5">
+                    <ul className="mt-5 space-y-2.5 lg:min-h-[100px]">
                       {plan.features.map((feature) => (
                         <li
                           key={feature.label}
