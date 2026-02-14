@@ -22,6 +22,12 @@ export const subscriptionsApi = {
         data,
       ),
     ),
+  cancel: () =>
+    withTokenRefresh(() =>
+      apiClient.subscriptions.subscriptionsControllerCancelSubscription(
+        getOrgId(),
+      ),
+    ),
   getUsage: () =>
     withTokenRefresh(() =>
       apiClient.subscriptionUsages.subscriptionUsagesControllerGetUsage(

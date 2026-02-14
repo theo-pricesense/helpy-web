@@ -30,6 +30,27 @@ export class SubscriptionsService {
     });
   }
   /**
+   * 구독 취소
+   * @param xOrganizationId 조직 ID
+   * @returns any 구독 취소 성공 (현재 기간 종료 시 만료)
+   * @throws ApiError
+   */
+  public subscriptionsControllerCancelSubscription(
+    xOrganizationId: string,
+  ): CancelablePromise<any> {
+    return this.httpRequest.request({
+      method: "DELETE",
+      url: "/subscriptions",
+      headers: {
+        "x-organization-id": xOrganizationId,
+      },
+      errors: {
+        400: `이미 취소/만료된 구독`,
+        404: `구독 정보 없음`,
+      },
+    });
+  }
+  /**
    * 플랜 변경
    * @param xOrganizationId 조직 ID
    * @param requestBody
