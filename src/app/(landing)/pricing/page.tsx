@@ -191,7 +191,7 @@ export default function PricingPage() {
           </div>
 
           {/* Plan cards */}
-          <div className="grid items-start gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {plans.map((plan) => {
               const basePrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
               const promoPrice =
