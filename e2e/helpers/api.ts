@@ -68,12 +68,15 @@ export async function getWorkspaces(
   const response = await request.get(`${API_BASE_URL}/workspaces`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "X-Organization-Id": organizationId,
+      "x-organization-id": organizationId,
     },
   });
 
   if (!response.ok()) {
-    throw new Error(`Failed to get workspaces: ${response.status()}`);
+    const body = await response.text().catch(() => "");
+    throw new Error(
+      `Failed to get workspaces: ${response.status()} ${response.statusText()} - ${body}`,
+    );
   }
 
   return response.json();
