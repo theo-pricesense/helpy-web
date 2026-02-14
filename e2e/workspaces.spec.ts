@@ -19,7 +19,7 @@ test.describe("워크스페이스", () => {
     });
 
     await expect(
-      page.getByRole("heading", { name: "워크스페이스" }),
+      page.getByRole("heading", { name: "워크스페이스", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByText("AI 고객 서비스 워크스페이스를 관리하세요."),

@@ -49,8 +49,8 @@ export namespace AiSettingsResponseDto {
    * API 키 모드
    */
   export enum apiKeyMode {
-    HELPY = "helpy",
-    BYOK = "byok",
+    HELPY = "HELPY",
+    BYOK = "BYOK",
   }
   /**
    * 임베딩 모델

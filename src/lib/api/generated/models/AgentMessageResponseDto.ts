@@ -37,16 +37,16 @@ export namespace AgentMessageResponseDto {
    * 역할
    */
   export enum role {
-    CUSTOMER = "customer",
-    ASSISTANT = "assistant",
-    AGENT = "agent",
+    CUSTOMER = "CUSTOMER",
+    ASSISTANT = "ASSISTANT",
+    AGENT = "AGENT",
   }
   /**
    * 콘텐츠 타입
    */
   export enum contentType {
-    TEXT = "text",
-    IMAGE = "image",
-    FILE = "file",
+    TEXT = "TEXT",
+    IMAGE = "IMAGE",
+    FILE = "FILE",
   }
 }

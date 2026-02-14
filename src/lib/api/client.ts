@@ -1,8 +1,5 @@
 import { useAuthStore } from "@/stores/auth-store";
-import {
-  getCurrentOrgId,
-  useOrganizationStore,
-} from "@/stores/organization-store";
+import { useOrganizationStore } from "@/stores/organization-store";
 import { ApiClient } from "./generated";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -83,14 +80,6 @@ export const apiClient = new ApiClient({
   TOKEN: async () => {
     const token = await getValidAccessToken();
     return token ?? "";
-  },
-  HEADERS: async () => {
-    const orgId = getCurrentOrgId();
-    const headers: Record<string, string> = {};
-    if (orgId) {
-      headers["X-Organization-Id"] = orgId;
-    }
-    return headers;
   },
 });
 
