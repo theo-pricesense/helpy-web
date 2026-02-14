@@ -20,20 +20,20 @@ export function HeroSection() {
       {/* Badge */}
       <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm text-muted-foreground">
         <span className="inline-block h-2 w-2 rounded-full bg-primary animate-pulse" />
-        AI-powered Customer Service
+        AI-powered CS
       </div>
 
       {/* Headline */}
       <h1 className="max-w-3xl text-center text-4xl font-bold leading-tight tracking-tight text-balance text-foreground sm:text-5xl md:text-6xl">
-        {"고객 서비스의 미래,"}
+        {"CS팀 없어도"}
         <br />
-        <span className="text-primary">AI가 함께합니다</span>
+        <span className="text-primary">괜찮아요</span>
       </h1>
 
       {/* Subheadline */}
       <p className="mt-6 max-w-xl text-center text-lg leading-relaxed text-muted-foreground md:text-xl">
-        AI 챗봇, 자동 응답, 실시간 분석까지. Helpy로 스마트한 고객 경험을
-        구축하세요.
+        AI가 24시간 고객 문의에 응대합니다.
+        <br />월 4.9만원부터. 무료로 시작하세요.
       </p>
 
       {/* CTAs */}

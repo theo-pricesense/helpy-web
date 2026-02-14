@@ -10,39 +10,37 @@ import {
 const features = [
   {
     icon: Bot,
-    title: "AI 챗봇",
-    description:
-      "자연어 처리 기반 AI가 고객 문의를 자동으로 이해하고 정확한 답변을 제공합니다.",
+    title: "반복 문의 자동 응답",
+    description: '"배송 어디예요?" "교환 어떻게 해요?" AI가 알아서 답변합니다.',
   },
   {
     icon: Zap,
-    title: "자동 응답 시스템",
+    title: "5분이면 셋업 완료",
     description:
-      "반복되는 질문은 AI가 즉시 처리하여 상담원의 업무 부담을 줄여줍니다.",
+      "복잡한 설정 없이 시작하세요. FAQ만 올리면 AI가 바로 학습합니다.",
+  },
+  {
+    icon: MessageSquare,
+    title: "웹 위젯 한 줄 설치",
+    description: "코드 한 줄이면 내 쇼핑몰에 AI 상담 위젯이 붙습니다.",
   },
   {
     icon: BarChart3,
     title: "실시간 분석",
     description:
-      "고객 만족도, 응답 시간, 해결률 등 핵심 지표를 실시간으로 모니터링합니다.",
-  },
-  {
-    icon: MessageSquare,
-    title: "옴니채널 지원",
-    description:
-      "웹, 모바일, 소셜 미디어 등 다양한 채널의 고객 문의를 한 곳에서 관리합니다.",
-  },
-  {
-    icon: Shield,
-    title: "엔터프라이즈 보안",
-    description:
-      "SOC 2 인증, 데이터 암호화, RBAC 등 기업급 보안 기능을 기본 제공합니다.",
+      "어떤 문의가 많은지, AI가 얼마나 해결했는지 한눈에 확인하세요.",
   },
   {
     icon: Globe,
-    title: "다국어 지원",
+    title: "해외 고객도 OK",
     description:
-      "AI 번역 엔진으로 전 세계 고객에게 모국어로 된 지원을 제공합니다.",
+      "AI가 자동으로 번역해서 응대합니다. 영어, 일본어, 중국어 지원.",
+  },
+  {
+    icon: Shield,
+    title: "AI 응답 기본 포함",
+    description:
+      "별도 과금 없이 AI 응답이 기본 포함되어 있습니다. 숨겨진 비용 없음.",
   },
 ];
 
@@ -54,11 +52,10 @@ export function FeaturesSection() {
         <div className="text-center">
           <p className="text-sm font-medium text-primary">Features</p>
           <h2 className="mt-3 text-3xl font-bold text-balance text-foreground sm:text-4xl">
-            고객 서비스에 필요한 모든 것
+            혼자서도 할 수 있어요
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-            AI 기술을 활용한 종합 고객 서비스 플랫폼으로, 더 빠르고 정확한
-            지원을 제공하세요.
+            CS 전담 인력 없이도 AI가 고객 응대를 처리합니다.
           </p>
         </div>
 
