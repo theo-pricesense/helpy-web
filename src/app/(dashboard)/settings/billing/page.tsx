@@ -186,7 +186,6 @@ export default function BillingPage() {
   const [planDialogOpen, setPlanDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanCode>("FREE");
   const [changingPlan, setChangingPlan] = useState(false);
-  const [cancelingSubscription, setCancelingSubscription] = useState(false);
 
   // Auto-open plan dialog from ?plan= query param (from pricing page)
   useEffect(() => {
@@ -260,21 +259,6 @@ export default function BillingPage() {
       toast.error("Failed to change plan");
     } finally {
       setChangingPlan(false);
-    }
-  };
-
-  const handleCancelSubscription = async () => {
-    setCancelingSubscription(true);
-    try {
-      await subscriptionsApi.cancel();
-      toast.success(
-        "Subscription canceled. It will expire at the end of the billing period.",
-      );
-      loadData();
-    } catch {
-      toast.error("Failed to cancel subscription");
-    } finally {
-      setCancelingSubscription(false);
     }
   };
 
@@ -367,64 +351,29 @@ export default function BillingPage() {
                           : "No active subscription"}
                   </CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
-                  {planCode !== "FREE" &&
-                    subscription?.status !== "canceled" && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-muted-foreground"
-                          >
-                            Cancel
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Cancel Subscription?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Your subscription will be canceled at the end of
-                              the current billing period (
-                              {subscription &&
-                                formatDate(subscription.currentPeriodEnd)}
-                              ). You can continue using the service until then.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>
-                              Keep Subscription
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={handleCancelSubscription}
-                              disabled={cancelingSubscription}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              {cancelingSubscription && (
-                                <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                              )}
-                              Cancel Subscription
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedPlan(planCode);
-                      setPlanDialogOpen(true);
-                    }}
-                  >
-                    <Crown className="mr-1.5 h-3.5 w-3.5" />
-                    {planCode === "FREE" ? "Upgrade" : "Change Plan"}
-                  </Button>
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedPlan(planCode);
+                    setPlanDialogOpen(true);
+                  }}
+                >
+                  <Crown className="mr-1.5 h-3.5 w-3.5" />
+                  {planCode === "FREE" ? "Upgrade" : "Change Plan"}
+                </Button>
               </div>
             </CardHeader>
+            {planCode !== "FREE" && (
+              <CardContent className="pt-0">
+                <Link
+                  href="/settings/billing/manage"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Manage subscription →
+                </Link>
+              </CardContent>
+            )}
           </Card>
 
           {/* Usage */}
